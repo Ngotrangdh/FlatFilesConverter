@@ -16,10 +16,11 @@ namespace FlatFilesConverter.Business.Export
 
                 foreach (DataColumn column in table.Columns)
                 {
-                    columns.Add(row[column].ToString());
+                    
+                    columns.Add(row[column].ToString().Trim());
                 }
 
-                lines.Add(string.Join(",", columns));
+                lines.Add(string.Join($"{configuration.Delimiter}", columns));
 
 
                 // IEnumerable<string> columns = table.Columns.Cast<DataColumn>().Select(col => row[col].ToString());

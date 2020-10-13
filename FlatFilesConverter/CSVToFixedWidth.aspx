@@ -43,7 +43,8 @@
     <fieldset>
         <legend>Step 3: Convert</legend>
         <asp:Button ID="ButtonConvert" runat="server" Text="Convert" OnClick="ButtonConvert_Click" />
+        <br />
+        <asp:Button ID="ButtonDownload" runat="server" Text="DownLoad" OnClick="ButtonDownload_Click"/>
     </fieldset>
-    
 </asp:Content>
 

@@ -33,6 +33,12 @@ namespace FlatFilesConverter
                 return;
             }
 
+            if (string.IsNullOrWhiteSpace(TextBoxFieldName.Text))
+            {
+                Response.Write("Invalid Field Name Input");
+                return;
+            }
+
             ColumnLayout column = new ColumnLayout
             {
                 ColumnPosition = columnPosition,
@@ -117,11 +123,18 @@ namespace FlatFilesConverter
             var table = importer.Import(savePath, Configuration);
 
             //export
-            var filePathOutput = savePath.Replace("csv", "dat");
+            var OutputFilePath = savePath.Replace("csv", "dat");
             var FixedWidthMapper = new Business.Export.FixedWithMapper();
             var FixedWidthWriter = new Business.Export.Writer();
             var Exporter = new Business.Export.Exporter(FixedWidthMapper, FixedWidthWriter);
-            Exporter.Export(table, filePathOutput, Configuration);
+            Exporter.Export(table, OutputFilePath, Configuration);
+            ViewState["OutputFilepath"] = OutputFilePath;
+        }
+
+        protected void ButtonDownload_Click(object sender, EventArgs e)
+        {
+            var OutputFilePath = ViewState["OutputFilepath"];
+            Response.Redirect($"DownloadFile.ashx?filePath={OutputFilePath}");
         }
     }
 }
