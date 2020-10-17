@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlatFilesConverter", "FlatFilesConverter\FlatFilesConverter.csproj", "{78ED0B73-3352-4AE1-96B7-7BB34FFC6FD8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlatFilesConverter.Business", "FlatFilesConverter.Business\FlatFilesConverter.Business.csproj", "{C9B6F3EA-05AD-4B95-93D9-875A12F2A05B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlatFilesConverter.Business", "FlatFilesConverter.Business\FlatFilesConverter.Business.csproj", "{C9B6F3EA-05AD-4B95-93D9-875A12F2A05B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlatFilesConverter.Business.Tests", "FlatFilesConverter.Business.Tests\FlatFilesConverter.Business.Tests.csproj", "{FAFA249A-7C71-4C6C-AED8-BB0C9BA00700}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{C9B6F3EA-05AD-4B95-93D9-875A12F2A05B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9B6F3EA-05AD-4B95-93D9-875A12F2A05B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9B6F3EA-05AD-4B95-93D9-875A12F2A05B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAFA249A-7C71-4C6C-AED8-BB0C9BA00700}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAFA249A-7C71-4C6C-AED8-BB0C9BA00700}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAFA249A-7C71-4C6C-AED8-BB0C9BA00700}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAFA249A-7C71-4C6C-AED8-BB0C9BA00700}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

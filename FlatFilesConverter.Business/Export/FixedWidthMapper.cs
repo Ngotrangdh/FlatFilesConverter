@@ -6,7 +6,7 @@ using FlatFilesConverter.Business.Config;
 
 namespace FlatFilesConverter.Business.Export
 {
-    public class FixedWithMapper : IMapper
+    public class FixedWidthMapper : IMapper
     {
         public List<string> Map(DataTable table, Configuration configuration)
         {

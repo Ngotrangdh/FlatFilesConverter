@@ -1,43 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Diagnostics.SymbolStore;
-using System.Linq;
-using System.Threading;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using FlatFilesConverter.Business.Config;
+﻿using FlatFilesConverter.Business.Config;
 using FlatFilesConverter.Business.Export;
 using FlatFilesConverter.Business.Import;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.SymbolStore;
+using System.Linq;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 
 namespace FlatFilesConverter
 {
-    public partial class FixedWidthToCSV : System.Web.UI.Page
+    public partial class FixedWidthToCSV : Page
     {
-        private List<ColumnLayout> Columns => (List<ColumnLayout>)(ViewState["ColumnLayouts"] ?? (ViewState["ColumnLayouts"] = new List<ColumnLayout>()));
-        protected void Page_Load(object sender, EventArgs e)
-        {
+        private const string COLUMN_LAYOUTS = "ColumnLayouts";
 
-        }
+        private List<ColumnLayout> Columns => (List<ColumnLayout>)(ViewState[COLUMN_LAYOUTS] ?? (ViewState[COLUMN_LAYOUTS] = new List<ColumnLayout>()));
 
         protected void ButtonAddRow_Click(object sender, EventArgs e)
         {
+            BulletedListError.Items.Clear();
+            LabelColumnsEmptyError.Text = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(TextBoxFieldName.Text))
+            {
+                BulletedListError.Items.Add(new ListItem("Field name required"));
+            }
+
+            if (string.IsNullOrWhiteSpace(TextBoxColumnPosition.Text))
+            {
+                BulletedListError.Items.Add(new ListItem("Column Position required"));
+            }
+
+            if (string.IsNullOrWhiteSpace(TextBoxFieldLength.Text))
+            {
+                BulletedListError.Items.Add(new ListItem("Field length required"));
+            }
+
             if (!int.TryParse(TextBoxColumnPosition.Text, out int _columnPosition))
             {
-                Response.Write("Invalid Column Position Input");
-                return;
+                BulletedListError.Items.Add(new ListItem("Invalid column position input"));
             }
 
             if (!int.TryParse(TextBoxFieldLength.Text, out int _fieldLength))
             {
-                Response.Write("Invalid Field Length Input");
-                return;
+                BulletedListError.Items.Add(new ListItem("Invalid field length input"));
             }
 
-            if (string.IsNullOrWhiteSpace(TextBoxFieldName.Text))
+            if (BulletedListError.Items.Count > 0)
             {
-                Response.Write("Invalid Field Name Input");
                 return;
             }
 
@@ -66,15 +76,25 @@ namespace FlatFilesConverter
 
         protected void ButtonConvert_Click(object sender, EventArgs e)
         {
-            // save the upload file
+            // check and save the upload file
             var savePath = Server.MapPath("Data\\");
-            string fileName;
-            
+
             if (FileUpload.HasFile)
             {
-                fileName = Server.HtmlEncode(FileUpload.FileName);
-                savePath += FileUpload.FileName;
+                savePath += Server.HtmlEncode(FileUpload.FileName);
                 FileUpload.SaveAs(savePath);
+            }
+            else
+            {
+                LabelFileUploadError.Text = "Please upload a file.";
+                return;
+            }
+
+            // check if config is entered
+            if (! Columns.Any())
+            {
+                LabelColumnsEmptyError.Text = "Please provide the field configuration.";
+                return;
             }
 
             // get the config: isFirstLineHeader, delimiter, columnLayouts
@@ -94,7 +114,6 @@ namespace FlatFilesConverter
                 Delimiter = delimiter,
                 IsFirstLineHeader = isFirstLineHeader,
                 ColumnLayouts = Columns
-
             };
 
             // call business code
@@ -110,12 +129,6 @@ namespace FlatFilesConverter
             var writer = new Writer();
             var exporter = new Exporter(CSVMapper, writer);
             exporter.Export(table, outputFilePath, config);
-            ViewState["OutputFilePath"] = outputFilePath;
-        }
-
-        protected void ButtonDownload_Click(object sender, EventArgs e)
-        {
-            var outputFilePath = ViewState["OutputFilePath"];
             Response.Redirect($"DownloadFile.ashx?filePath={outputFilePath}");
         }
     }

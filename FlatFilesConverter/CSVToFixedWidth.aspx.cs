@@ -1,10 +1,8 @@
-﻿using Antlr.Runtime.Tree;
-using FlatFilesConverter.Business.Config;
+﻿using FlatFilesConverter.Business.Config;
 using FlatFilesConverter.Business.Export;
 using FlatFilesConverter.Business.Import;
 using System;
 using System.Collections.Generic;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -124,7 +122,7 @@ namespace FlatFilesConverter
 
             //export
             var OutputFilePath = savePath.Replace("csv", "dat");
-            var FixedWidthMapper = new Business.Export.FixedWithMapper();
+            var FixedWidthMapper = new Business.Export.FixedWidthMapper();
             var FixedWidthWriter = new Business.Export.Writer();
             var Exporter = new Business.Export.Exporter(FixedWidthMapper, FixedWidthWriter);
             Exporter.Export(table, OutputFilePath, Configuration);
