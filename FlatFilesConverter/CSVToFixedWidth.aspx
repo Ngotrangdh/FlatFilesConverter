@@ -45,6 +45,10 @@
         <asp:Button ID="ButtonConvert" runat="server" Text="Convert" OnClick="ButtonConvert_Click" />
         <br />
         <asp:Button ID="ButtonDownload" runat="server" Text="DownLoad" OnClick="ButtonDownload_Click"/>
+        <br />
+        <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="Button" />
+        <br />
+        <asp:BulletedList ID="BulletedListTable" runat="server"></asp:BulletedList>
     </fieldset>
 </asp:Content>
 

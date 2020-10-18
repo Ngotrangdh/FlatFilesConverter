@@ -2,6 +2,7 @@
 using FlatFilesConverter.Business.Config;
 using System.Collections.Generic;
 using System.Data;
+using FlatFileConverter.Data;
 
 namespace FlatFilesConverter.Business.Import
 {
@@ -21,6 +22,7 @@ namespace FlatFilesConverter.Business.Import
             FileReaderOption option = new FileReaderOption { FilePath = filePath, IsFirstLineHeader = configuration.IsFirstLineHeader };
             List<string> lines = _fileReader.Read(option);
             var table = _mapper.Map(lines, configuration);
+            Class1.saveDataTable(table);
             return table;
         }
 

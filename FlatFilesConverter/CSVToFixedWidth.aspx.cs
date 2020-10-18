@@ -1,6 +1,7 @@
 ﻿using FlatFilesConverter.Business.Config;
 using FlatFilesConverter.Business.Export;
 using FlatFilesConverter.Business.Import;
+using FlatFileConverter.Data;
 using System;
 using System.Collections.Generic;
 using System.Web.UI;
@@ -133,6 +134,15 @@ namespace FlatFilesConverter
         {
             var OutputFilePath = ViewState["OutputFilepath"];
             Response.Redirect($"DownloadFile.ashx?filePath={OutputFilePath}");
+        }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            var lines = Class1.readDB();
+            foreach (var item in lines)
+            {
+                BulletedListTable.Items.Add(item);
+            } ;
         }
     }
 }
