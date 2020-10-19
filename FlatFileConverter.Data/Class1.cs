@@ -48,16 +48,15 @@ namespace FlatFileConverter.Data
         public static void saveDataTable(DataTable table)
         {
             string connectionString = "Server=localhost\\SQLEXPRESS; Database=SampleDB;Trusted_Connection=True;";
+            string tableName = "trang_" + DateTime.Now.Ticks.ToString();
             var columnConfig = new List<string>();
             foreach (DataColumn column in table.Columns)
             {
-                columnConfig.Add(column.ColumnName + ' ' + column.DataType.ToString());
-               
+                columnConfig.Add(column.ColumnName + ' ' + "nvarchar(4000)");
             }
             string columnParam = string.Join(",", columnConfig);
-            string createTable = $"create table User ({columnParam});";
+            string createTable = $"create table {tableName} ({columnParam});";
 
-            //string createTable = "create table User (username nvarchar(30), age int);";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -70,7 +69,7 @@ namespace FlatFileConverter.Data
                     {
                         bulkCopy.ColumnMappings.Add(column.ColumnName, column.ColumnName);
                     }
-                    bulkCopy.DestinationTableName = "User";
+                    bulkCopy.DestinationTableName = tableName;
 
                     try
                     {
