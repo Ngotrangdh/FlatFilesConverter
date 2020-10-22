@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace FlatFileConverter.Data
 {
-    class UserInfo
+    public class UserInfo
     {
         string Username { get; set; }
-
+        string Password { get; set; }
     }
 }
