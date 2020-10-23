@@ -52,6 +52,8 @@
                         <li><a runat="server" href="~/CSVToFixedWidth">CSV To Fixed Width</a></li>
                         <li><a runat="server" href="~/FixedWithToCSV">Fixed Width To CSV</a></li>
                         <li><a runat="server" href="~/About">About</a></li>
+                        <li><a id="LinkLogin" runat="server" href="~/Login">Log in</a></li>
+                        <li><a id="LinkRegister" runat="server" href="~/Registration">Register</a></li>
                     </ul>
                 </div>
             </div>

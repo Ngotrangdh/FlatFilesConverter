@@ -8,7 +8,7 @@ namespace FlatFilesConverter
         protected void Page_Load(object sender, EventArgs e)
         {
             
-            if (Session["UserID"] == null)
+            if (Session["Username"] == null)
             {
                 Response.Redirect("Login.aspx?ReturnURL=About.aspx");
             }

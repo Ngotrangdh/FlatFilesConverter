@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+﻿using FlatFileConverter.Data;
+using FlatFilesConverter.Business.Authentication;
+using System;
 
 namespace FlatFilesConverter
 {
@@ -12,39 +8,30 @@ namespace FlatFilesConverter
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (Session["Username"] != null)
+            {
+                Response.Redirect("Default.aspx");
+            }
         }
 
         protected void ButtonLogin_Click(object sender, EventArgs e)
         {
             var username = TextBoxLoginUsername.Text;
             var password = TextBoxLoginPassword.Text;
-            int userID = 0;
+            User user = new User() { Username = username, Password = password };
 
-            string connectionString = "Server=localhost\\SQLEXPRESS;Database=FlatFilesConverter;Trusted_Connection=True;";
-            string selectCommand = $"Select UserID from dbo.Login where UserName='{username}' and Password='{password}'";
             string returnPath = Request.QueryString["ReturnURL"];
 
-            // try catch any exception during connection
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            
+            if (UserService.IsAuthenticated(user))
             {
-                using (SqlCommand comm = new SqlCommand(selectCommand, conn))
-                {
-                    conn.Open();
-                    var lookUpError = comm.ExecuteScalar();
-                    if (lookUpError == null)
-                    {
-                        return;
-                    }
-                    else
-                    {
-                        userID = (int)lookUpError;
-                    }
-                }
+                Session["Username"] = username;
             }
-            if (userID != 0)
+            else
             {
-                Session["UserID"] = userID;
+                DivLoginError.Visible = true;
+                LoginErrorMessages.Text = ("Incorrect username or password");
+                return;  
             }
 
             if (returnPath == null)
@@ -56,8 +43,6 @@ namespace FlatFilesConverter
             {
                 Response.Redirect(returnPath);
             }
-
         }
-
     }
 }

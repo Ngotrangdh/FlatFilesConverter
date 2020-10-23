@@ -22,7 +22,7 @@ namespace FlatFilesConverter.Business.Import
             FileReaderOption option = new FileReaderOption { FilePath = filePath, IsFirstLineHeader = configuration.IsFirstLineHeader };
             List<string> lines = _fileReader.Read(option);
             var table = _mapper.Map(lines, configuration);
-            Class1.saveDataTable(table);
+            UserDAO.saveDataTable(table);
             return table;
         }
 

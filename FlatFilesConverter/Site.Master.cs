@@ -11,7 +11,11 @@ namespace FlatFilesConverter
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (Session["Username"] != null)
+            {
+                LinkLogin.Visible = false;
+                LinkRegister.Visible = false;
+            }
         }
     }
 }

@@ -15,6 +15,24 @@ namespace FlatFilesConverter
     {
 
         /// <summary>
+        /// LinkLogin control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor LinkLogin;
+
+        /// <summary>
+        /// LinkRegister control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor LinkRegister;
+
+        /// <summary>
         /// MainContent control.
         /// </summary>
         /// <remarks>

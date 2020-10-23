@@ -138,7 +138,7 @@ namespace FlatFilesConverter
 
         protected void Button1_Click(object sender, EventArgs e)
         {
-            var lines = Class1.readDB();
+            var lines = UserDAO.readDB();
             foreach (var item in lines)
             {
                 BulletedListTable.Items.Add(item);
