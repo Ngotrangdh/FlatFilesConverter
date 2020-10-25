@@ -14,8 +14,6 @@ namespace FlatFileConverter.Data
             List<string> lines = new List<string>();
             string connectionString = "Server=localhost\\SQLEXPRESS; Database=SampleDB;Trusted_Connection=True;";
             string queryString = "select * from SampleDB.dbo.Product;";
-            //string nonQueryString = "insert into SampleDB.dbo.Product (ProductName, Price) values ('Mouse', 12);";
-            //string deleteQueryString = "delete from SampleDB.dbo.Product where ProductID=4";
             string updateQueryString = "update SampleDB.dbo.Product set price=1 where ProductID=1;";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -87,7 +85,7 @@ namespace FlatFileConverter.Data
         public static bool IsUserAuthenticated(User user)
         {
             string connectionString = "Server=localhost\\SQLEXPRESS;Database=FlatFilesConverter;Trusted_Connection=True;";
-            string selectCommand = $"Select * from dbo.[User] where UserName='{user.Username}'";
+            string selectCommand = $"Select * from dbo.[User] where UserName=@username";
             string passwordSaltString = null;
             string passwordHashString = null;
 
@@ -98,6 +96,7 @@ namespace FlatFileConverter.Data
                 using (SqlCommand comm = new SqlCommand(selectCommand, conn))
                 {
                     conn.Open();
+                    comm.Parameters.AddWithValue("username", user.Username);
                     var reader = comm.ExecuteReader();
 
                     if (!reader.HasRows)
@@ -106,6 +105,7 @@ namespace FlatFileConverter.Data
                     }
                     else
                     {
+                        // only one line, does it need to use while
                         while(reader.Read())
                         {
                             passwordSaltString = reader.GetString(2);
@@ -171,6 +171,23 @@ namespace FlatFileConverter.Data
                 }
 
                 
+            }
+        }
+
+        public static bool HasUser(string username)
+        {
+            string connectionString = "Server=localhost\\SQLEXPRESS;Database=FlatFilesConverter;Trusted_Connection=True;";
+            string selectCommand = $"Select Username from dbo.[User] where UserName=@username";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                using(SqlCommand comm = new SqlCommand(selectCommand, conn))
+                {
+                    conn.Open();
+                    comm.Parameters.AddWithValue("username", username);
+                    var lookUpResult = comm.ExecuteScalar();
+                    return lookUpResult != null;
+                }
             }
         }
     }

@@ -11,61 +11,43 @@ namespace FlatFilesConverter
 {
 
 
-    public partial class Login
+    public partial class LoginMaster
     {
 
         /// <summary>
-        /// TextBoxLoginUsername control.
+        /// LinkLogin control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBoxLoginUsername;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor LinkLogin;
 
         /// <summary>
-        /// TextBoxLoginPassword control.
+        /// LinkRegister control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBoxLoginPassword;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor LinkRegister;
 
         /// <summary>
-        /// CheckBoxRememberMe control.
+        /// LinkLogout control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox CheckBoxRememberMe;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor LinkLogout;
 
         /// <summary>
-        /// DivLoginError control.
+        /// MainContent control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl DivLoginError;
-
-        /// <summary>
-        /// LoginErrorMessages control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LoginErrorMessages;
-
-        /// <summary>
-        /// ButtonLogin control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button ButtonLogin;
+        protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContent;
     }
 }

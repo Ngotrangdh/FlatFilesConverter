@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="FlatFilesConverter.Login" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Login.Master" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="FlatFilesConverter.Login" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row">
         <div class="col-xs-12 col-md-6">
@@ -16,6 +16,10 @@
                         <label for="TextBoxLoginPassword">Password *</label>
                         <asp:TextBox ID="TextBoxLoginPassword" runat="server" TextMode="Password" CssClass="form-control" required="required" placeholder="Password" />
                         <asp:RequiredFieldValidator ControlToValidate="TextBoxLoginPassword"  CssClass="text-danger" runat="server" ErrorMessage="Password is required!"></asp:RequiredFieldValidator>
+                    </div>
+                    <div class="form-group">
+                        <asp:CheckBox ID="CheckBoxRememberMe" runat="server" />
+                        <label for="CheckBoxRememberMe">Remember me</label>
                     </div>
                     <div class="row">
                         <div class="col-xs-12">

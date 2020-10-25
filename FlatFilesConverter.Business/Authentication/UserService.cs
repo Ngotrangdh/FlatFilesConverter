@@ -13,5 +13,9 @@ namespace FlatFilesConverter.Business.Authentication
         {
             return UserDAO.RegisterUser(user);
         }
+        public static bool HasUser(string username)
+        {
+            return UserDAO.HasUser(username);
+        }
     }
 }
