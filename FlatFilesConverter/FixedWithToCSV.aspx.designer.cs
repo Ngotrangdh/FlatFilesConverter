@@ -33,15 +33,6 @@ namespace FlatFilesConverter
         protected global::System.Web.UI.WebControls.Label LabelFileUploadError;
 
         /// <summary>
-        /// LableIsFirstLineHeader control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LableIsFirstLineHeader;
-
-        /// <summary>
         /// CheckBoxIsFirstLineHeader control.
         /// </summary>
         /// <remarks>
@@ -49,15 +40,6 @@ namespace FlatFilesConverter
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox CheckBoxIsFirstLineHeader;
-
-        /// <summary>
-        /// LabelFieldName control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LabelFieldName;
 
         /// <summary>
         /// TextBoxFieldName control.
@@ -69,15 +51,6 @@ namespace FlatFilesConverter
         protected global::System.Web.UI.WebControls.TextBox TextBoxFieldName;
 
         /// <summary>
-        /// LabelColumnPosition control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LabelColumnPosition;
-
-        /// <summary>
         /// TextBoxColumnPosition control.
         /// </summary>
         /// <remarks>
@@ -85,15 +58,6 @@ namespace FlatFilesConverter
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox TextBoxColumnPosition;
-
-        /// <summary>
-        /// LabelFieldLength control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LabelFieldLength;
 
         /// <summary>
         /// TextBoxFieldLength control.
@@ -139,15 +103,6 @@ namespace FlatFilesConverter
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView GridViewLayout;
-
-        /// <summary>
-        /// LabelCSVDelimiter control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LabelCSVDelimiter;
 
         /// <summary>
         /// TextBoxDelimiter control.

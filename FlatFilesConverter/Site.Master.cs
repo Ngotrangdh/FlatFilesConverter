@@ -11,7 +11,16 @@ namespace FlatFilesConverter
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["username"] != null)
+            if (Page.Title.Contains("CSV To Fixed Width"))
+            {
+                LinkCSVToFixedWidth.Attributes["class"] = "active";
+            }
+            if (Page.Title.Contains("Fixed Width To CSV"))
+            {
+                LinkFixedWithToCSV.Attributes["class"] = "active";
+            }
+
+            if (Session["userID"] != null)
             {
                 LinkLogin.Visible = false;
                 LinkRegister.Visible = false;
@@ -21,11 +30,12 @@ namespace FlatFilesConverter
             else if (Request.Cookies["username"] is HttpCookie usernameCookie)
             {
                 string username = Unprotect(usernameCookie.Value, "identity");
+                int userID = UserService.HasUser(username);
                 if (!string.IsNullOrEmpty(username))
                 {
-                    if (UserService.HasUser(username))
+                    if (userID != 0)
                     {
-                        Session["username"] = username;
+                        Session["userID"] = userID;
                         return;
                     }
                 }

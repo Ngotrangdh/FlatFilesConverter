@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -9,20 +10,17 @@ namespace FlatFileConverter.Data
 {
     public class UserDAO
     {
-        public static List<string> readDB()
+        public static List<string> ReadDB()
         {
             List<string> lines = new List<string>();
-            string connectionString = "Server=localhost\\SQLEXPRESS; Database=SampleDB;Trusted_Connection=True;";
-            string queryString = "select * from SampleDB.dbo.Product;";
-            string updateQueryString = "update SampleDB.dbo.Product set price=1 where ProductID=1;";
+            string connectionString = "Server=localhost\\SQLEXPRESS; Database=FlatFilesConverter;Trusted_Connection=True;";
+            string queryString = "select * from dbo.Product;";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                SqlCommand insertCommand = new SqlCommand(updateQueryString, connection);
                 SqlCommand selectCommand = new SqlCommand(queryString, connection);
                 try
                 {
                     connection.Open();
-                    insertCommand.ExecuteNonQuery();
 
                     using (SqlDataReader reader = selectCommand.ExecuteReader())
                     {
@@ -42,53 +40,64 @@ namespace FlatFileConverter.Data
             }
         }
 
-        public static void saveDataTable(DataTable table)
+        public static void SaveDataTable(int userID, string fileName, DataTable table)
         {
-            string connectionString = "Server=localhost\\SQLEXPRESS; Database=SampleDB;Trusted_Connection=True;";
-            string tableName = "trang_" + DateTime.Now.Ticks.ToString();
+            string connectionString = "Server=localhost\\SQLEXPRESS;Database=FlatFilesConverter;Trusted_Connection=True;";
+            string tableName = @fileName + '_' + DateTime.Now.Ticks.ToString();
             var columnConfig = new List<string>();
             foreach (DataColumn column in table.Columns)
             {
                 columnConfig.Add(column.ColumnName + ' ' + "nvarchar(4000)");
             }
             string columnParam = string.Join(",", columnConfig);
-            string createTable = $"create table {tableName} ({columnParam});";
+            string createTableCommandText = $"create table {tableName} ({columnParam});";
+            string insertCommandString = "INSERT INTO[dbo].[UserTableMapping] ([UserID],[TableName]) VALUES (@userID, @tableName);";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                SqlCommand command = new SqlCommand(createTable, connection);
-                command.ExecuteNonQuery();
 
-                using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
+                using (SqlCommand createTableCommand = new SqlCommand(createTableCommandText, connection))
                 {
-                    foreach (DataColumn column in table.Columns)
+                    using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
                     {
-                        bulkCopy.ColumnMappings.Add(column.ColumnName, column.ColumnName);
-                    }
-                    bulkCopy.DestinationTableName = tableName;
+                        createTableCommand.ExecuteNonQuery();
+                        foreach (DataColumn column in table.Columns)
+                        {
+                            bulkCopy.ColumnMappings.Add(column.ColumnName, column.ColumnName);
+                        }
+                        bulkCopy.DestinationTableName = tableName;
 
-                    try
-                    {
-                        bulkCopy.WriteToServer(table);
-                    }
-                    catch (Exception)
-                    {
+                        try
+                        {
+                            bulkCopy.WriteToServer(table);
+                        }
+                        catch (Exception)
+                        {
 
-                        throw;
+                            throw;
+                        }
                     }
+
+                }
+
+                using (SqlCommand insertCommand = new SqlCommand(insertCommandString, connection))
+                {
+                    insertCommand.Parameters.AddWithValue("userID", userID);
+                    insertCommand.Parameters.AddWithValue("tableName", tableName);
+                    insertCommand.ExecuteNonQuery();
                 }
             }
-            
         }
 
-        public static bool IsUserAuthenticated(User user)
+        public static int IsUserAuthenticated(User user)
         {
             string connectionString = "Server=localhost\\SQLEXPRESS;Database=FlatFilesConverter;Trusted_Connection=True;";
             string selectCommand = $"Select * from dbo.[User] where UserName=@username";
+            int userID = 0;
+            int userIDFromData = 0;
             string passwordSaltString = null;
             string passwordHashString = null;
-
 
             // try catch any exception during connection
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -99,33 +108,31 @@ namespace FlatFileConverter.Data
                     comm.Parameters.AddWithValue("username", user.Username);
                     var reader = comm.ExecuteReader();
 
-                    if (!reader.HasRows)
-                    {
-                        return false;
-                    }
-                    else
+                    if (reader.HasRows)
                     {
                         // only one line, does it need to use while
-                        while(reader.Read())
+                        while (reader.Read())
                         {
+                            //use tryParse to catch exception
+                            userIDFromData = reader.GetInt32(0);
                             passwordSaltString = reader.GetString(2);
                             passwordHashString = reader.GetString(3);
                         }
-                        
+
                         int iterations = 1000;
-                        byte[] salt =Convert.FromBase64String(passwordSaltString);
+                        byte[] salt = Convert.FromBase64String(passwordSaltString);
                         var deriveKey = new Rfc2898DeriveBytes(user.Password, salt, iterations);
                         var passwordHashByte = deriveKey.GetBytes(20);
                         var hashToCompare = Convert.ToBase64String(passwordHashByte);
 
-                        if (!string.Equals(passwordHashString, hashToCompare))
+                        if (string.Equals(passwordHashString, hashToCompare))
                         {
-                            return false;
+                            userID = userIDFromData;
                         }
-                        return true;
                     }
                 }
             }
+            return userID;
         }
 
         public static bool RegisterUser(User user)
@@ -147,7 +154,7 @@ namespace FlatFileConverter.Data
             string insertCommand = $"Insert into dbo.[User] values (@username, @salt, @hash)";
 
             // try catch any exception
-            using(SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 using (SqlCommand selectComm = new SqlCommand(selectCommand, conn))
                 {
@@ -170,23 +177,24 @@ namespace FlatFileConverter.Data
                     }
                 }
 
-                
+
             }
         }
 
-        public static bool HasUser(string username)
+        public static int HasUser(string username)
         {
             string connectionString = "Server=localhost\\SQLEXPRESS;Database=FlatFilesConverter;Trusted_Connection=True;";
-            string selectCommand = $"Select Username from dbo.[User] where UserName=@username";
-
+            string selectCommand = $"Select UserID from dbo.[User] where Username=@username";
+            var userID = 0;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                using(SqlCommand comm = new SqlCommand(selectCommand, conn))
+                using (SqlCommand comm = new SqlCommand(selectCommand, conn))
                 {
                     conn.Open();
                     comm.Parameters.AddWithValue("username", username);
                     var lookUpResult = comm.ExecuteScalar();
-                    return lookUpResult != null;
+                    if (lookUpResult != null) userID = (int)lookUpResult;
+                    return userID;
                 }
             }
         }

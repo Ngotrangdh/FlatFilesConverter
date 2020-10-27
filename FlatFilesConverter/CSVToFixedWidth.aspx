@@ -3,29 +3,39 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <fieldset>
         <legend>Step 1: Select your input </legend>
-        <asp:FileUpload ID="FileUpload" runat="server" />
-        <asp:Label ID="UpLoadStatusLabel" runat="server"></asp:Label>
-        <br />
-        <asp:Label ID="LableIsFirstLineHeader" runat="server" Text="Is First Line Header"></asp:Label>
-        <asp:CheckBox ID="CheckBoxIsFirstLineHeader" runat="server" />
-        <br />
-        <asp:Label ID="LabelCSVDelimiter" runat="server" Text="Delimiter"></asp:Label>
-        <asp:TextBox ID="TextBoxDelimiter" runat="server"></asp:TextBox>
-        <br />
-        <br />
+        <div class="form-group">
+            <label for="FileUpload">File Input</label>
+            <asp:FileUpload ID="FileUpload" runat="server" />
+            <asp:Label ID="UpLoadStatusLabel" runat="server" />
+        </div>
+        <div class="form-group">
+            <label for="TextBoxDelimiter">Delimiter</label>
+            <asp:TextBox ID="TextBoxDelimiter" runat="server" CssClass="form-control"></asp:TextBox>
+        </div>
+        <div class="checkbox">
+            <label>
+                <asp:CheckBox ID="CheckBoxIsFirstLineHeader" runat="server" />
+                Is First Line Header
+            </label>
+        </div>
     </fieldset>
-    <br />
     <fieldset>
         <legend>Step 2: Define Field Layout</legend>
-        <asp:Label ID="LabelFieldName" runat="server" Text="Field Name"></asp:Label>
-        <asp:TextBox ID="TextBoxFieldName" runat="server"></asp:TextBox>
-        <asp:Label ID="LabelColumnPosition" runat="server" Text="Column Position"></asp:Label>
-        <asp:TextBox ID="TextBoxColumnPosition" runat="server"></asp:TextBox>
-        <asp:Label ID="LabelFieldLength" runat="server" Text="Field Length"></asp:Label>
-        <asp:TextBox ID="TextBoxFieldLength" runat="server"></asp:TextBox>
-        <asp:Button ID="ButtonAddRow" runat="server" Text="Add Row" OnClick="ButtonAddRow_Click" />
-        <br />
-        <br />
+        <div class="form-inline">
+            <div class="form-group">
+                <label for="TextBoxFieldName">Field name *</label>
+                <asp:TextBox ID="TextBoxFieldName" runat="server"></asp:TextBox>
+            </div>
+            <div class="form-group">
+                <label for="TextBoxColumnPosition">Column position *</label>
+                <asp:TextBox ID="TextBoxColumnPosition" runat="server"></asp:TextBox>
+            </div>
+            <div class="form-group">
+                <label for="TextBoxFieldLength">Field length *</label>
+                <asp:TextBox ID="TextBoxFieldLength" runat="server"></asp:TextBox>
+            </div>
+            <asp:Button ID="ButtonAddRow" runat="server" Text="Add Row" CssClass="btn btn-default" OnClick="ButtonAddRow_Click" />
+        </div>
         <asp:UpdatePanel runat="server">
             <Triggers>
                 <asp:AsyncPostBackTrigger ControlID="ButtonAddRow" />
@@ -44,7 +54,7 @@
         <legend>Step 3: Convert</legend>
         <asp:Button ID="ButtonConvert" runat="server" Text="Convert" OnClick="ButtonConvert_Click" />
         <br />
-        <asp:Button ID="ButtonDownload" runat="server" Text="DownLoad" OnClick="ButtonDownload_Click"/>
+        <asp:Button ID="ButtonDownload" runat="server" Text="DownLoad" OnClick="ButtonDownload_Click" />
         <br />
         <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="Button" />
         <br />

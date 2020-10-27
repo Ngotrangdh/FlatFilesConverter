@@ -4,7 +4,7 @@ namespace FlatFilesConverter.Business.Authentication
 {
     public class UserService
     {
-        public static bool IsAuthenticated(User user)
+        public static int IsAuthenticated(User user)
         {
             return UserDAO.IsUserAuthenticated(user);
         }
@@ -13,7 +13,7 @@ namespace FlatFilesConverter.Business.Authentication
         {
             return UserDAO.RegisterUser(user);
         }
-        public static bool HasUser(string username)
+        public static int HasUser(string username)
         {
             return UserDAO.HasUser(username);
         }

@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Linq;
+using System.IO;
 
 namespace FlatFilesConverter
 {
@@ -90,6 +92,7 @@ namespace FlatFilesConverter
             else
             {
                 UpLoadStatusLabel.Text = "You did not specify a file to upload.";
+                return;
             }
 
 
@@ -120,6 +123,8 @@ namespace FlatFilesConverter
             //can i use Imapper
             var importer = new Importer(CSVReader, CSVMapper);
             var table = importer.Import(savePath, Configuration);
+            var userID = int.Parse((string)Session["userID"]);
+            UserDAO.SaveDataTable(userID, Path.GetFileNameWithoutExtension(savePath), table);
 
             //export
             var OutputFilePath = savePath.Replace("csv", "dat");
@@ -138,7 +143,7 @@ namespace FlatFilesConverter
 
         protected void Button1_Click(object sender, EventArgs e)
         {
-            var lines = UserDAO.readDB();
+            var lines = UserDAO.ReadDB();
             foreach (var item in lines)
             {
                 BulletedListTable.Items.Add(item);

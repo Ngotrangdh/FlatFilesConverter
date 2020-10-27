@@ -1,9 +1,10 @@
-﻿using FlatFileConverter.Data;
+﻿  using FlatFileConverter.Data;
 using FlatFilesConverter.Business.Authentication;
 using System.Web;
 using System;
 using System.Web.Security;
 using System.Text;
+using Antlr.Runtime.Tree;
 
 namespace FlatFilesConverter
 {
@@ -15,17 +16,18 @@ namespace FlatFilesConverter
             var password = TextBoxLoginPassword.Text;
             bool isPersistentCookie = CheckBoxRememberMe.Checked;
             User user = new User() { Username = username, Password = password };
+            string userID = UserService.IsAuthenticated(user).ToString();
 
             string returnPath = Request.QueryString["ReturnURL"];
 
-            if (UserService.IsAuthenticated(user))
+            if (userID != "0")
             {
-                Session["username"] = username;
+                Session["userID"] = userID;
 
                 if (isPersistentCookie)
                 {
-                    string protectedUsername = Protect(username, "identity");
-                    HttpCookie cookie = new HttpCookie("username", protectedUsername)
+                    string protectedUserID = Protect(username, "identity");
+                    HttpCookie cookie = new HttpCookie("username", protectedUserID)
                     {
                         Expires = DateTime.Now.AddDays(2)
                     };
