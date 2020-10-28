@@ -1,4 +1,4 @@
-﻿using FlatFilesConverter.Business.Authentication;
+﻿using FlatFilesConverter.Business.Services;
 using System;
 using System.Text;
 using System.Web;
@@ -11,6 +11,7 @@ namespace FlatFilesConverter
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+
             if (Page.Title.Contains("CSV To Fixed Width"))
             {
                 LinkCSVToFixedWidth.Attributes["class"] = "active";
@@ -20,14 +21,7 @@ namespace FlatFilesConverter
                 LinkFixedWithToCSV.Attributes["class"] = "active";
             }
 
-            if (Session["userID"] != null)
-            {
-                LinkLogin.Visible = false;
-                LinkRegister.Visible = false;
-                LinkLogout.Visible = true;
-                return;
-            }
-            else if (Request.Cookies["username"] is HttpCookie usernameCookie)
+            if (Request.Cookies["username"] is HttpCookie usernameCookie)
             {
                 string username = Unprotect(usernameCookie.Value, "identity");
                 int userID = UserService.HasUser(username);
@@ -36,12 +30,16 @@ namespace FlatFilesConverter
                     if (userID != 0)
                     {
                         Session["userID"] = userID;
-                        return;
+                        LinkLogin.Visible = false;
+                        LinkRegister.Visible = false;
+                        LinkLogout.Visible = true;
                     }
                 }
             }
-
-            Response.Redirect($"~/Login.aspx?ReturnURL={Request.Url}");
+            else
+            {
+                Response.Redirect($"~/Login.aspx?ReturnURL={Request.Url}");
+            }
         }
 
         public static string Unprotect(string text, string purpose)

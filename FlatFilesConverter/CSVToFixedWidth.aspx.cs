@@ -1,13 +1,15 @@
-﻿using FlatFilesConverter.Business.Config;
-using FlatFilesConverter.Business.Export;
-using FlatFilesConverter.Business.Import;
-using FlatFileConverter.Data;
-using System;
+﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Linq;
-using System.IO;
+using Newtonsoft;
+using FlatFilesConverter.Business.Config;
+using FlatFilesConverter.Business.Export;
+using FlatFilesConverter.Business.Import;
+using FlatFilesConverter.Business.Services;
+using FlatFileConverter.Data;
+using Newtonsoft.Json;
 
 namespace FlatFilesConverter
 {
@@ -123,8 +125,9 @@ namespace FlatFilesConverter
             //can i use Imapper
             var importer = new Importer(CSVReader, CSVMapper);
             var table = importer.Import(savePath, Configuration);
-            var userID = int.Parse((string)Session["userID"]);
-            UserDAO.SaveDataTable(userID, Path.GetFileNameWithoutExtension(savePath), table);
+            var userID = int.Parse(Session["userID"].ToString());
+            var jsonConfig = JsonConvert.SerializeObject(Configuration);
+            FileService.SaveTable(jsonConfig, userID, Path.GetFileNameWithoutExtension(savePath), table);
 
             //export
             var OutputFilePath = savePath.Replace("csv", "dat");

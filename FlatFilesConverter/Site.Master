@@ -51,7 +51,7 @@
                     <ul class="nav navbar-nav">
                         <li runat="server" id="LinkCSVToFixedWidth"><a runat="server" href="~/CSVToFixedWidth">CSV To Fixed Width</a></li>
                         <li runat="server" id="LinkFixedWithToCSV"><a runat="server" href="~/FixedWithToCSV">Fixed Width To CSV</a></li>
-                        <li><a runat="server" href="~/About">About</a></li>
+                        <li><a runat="server" href="~/MyFiles">My Files</a></li>
                         <li><a id="LinkLogin" runat="server" href="~/Login">Log in</a></li>
                         <li><a id="LinkRegister" runat="server" href="~/Registration">Register</a></li>
                         <li><a id="LinkLogout" visible="false" runat="server" href="~/Logout">Log out</a></li>

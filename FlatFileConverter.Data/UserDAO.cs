@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace FlatFileConverter.Data
 {
@@ -37,56 +34,6 @@ namespace FlatFileConverter.Data
                     throw;
                 }
                 return lines;
-            }
-        }
-
-        public static void SaveDataTable(int userID, string fileName, DataTable table)
-        {
-            string connectionString = "Server=localhost\\SQLEXPRESS;Database=FlatFilesConverter;Trusted_Connection=True;";
-            string tableName = @fileName + '_' + DateTime.Now.Ticks.ToString();
-            var columnConfig = new List<string>();
-            foreach (DataColumn column in table.Columns)
-            {
-                columnConfig.Add(column.ColumnName + ' ' + "nvarchar(4000)");
-            }
-            string columnParam = string.Join(",", columnConfig);
-            string createTableCommandText = $"create table {tableName} ({columnParam});";
-            string insertCommandString = "INSERT INTO[dbo].[UserTableMapping] ([UserID],[TableName]) VALUES (@userID, @tableName);";
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-
-                using (SqlCommand createTableCommand = new SqlCommand(createTableCommandText, connection))
-                {
-                    using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
-                    {
-                        createTableCommand.ExecuteNonQuery();
-                        foreach (DataColumn column in table.Columns)
-                        {
-                            bulkCopy.ColumnMappings.Add(column.ColumnName, column.ColumnName);
-                        }
-                        bulkCopy.DestinationTableName = tableName;
-
-                        try
-                        {
-                            bulkCopy.WriteToServer(table);
-                        }
-                        catch (Exception)
-                        {
-
-                            throw;
-                        }
-                    }
-
-                }
-
-                using (SqlCommand insertCommand = new SqlCommand(insertCommandString, connection))
-                {
-                    insertCommand.Parameters.AddWithValue("userID", userID);
-                    insertCommand.Parameters.AddWithValue("tableName", tableName);
-                    insertCommand.ExecuteNonQuery();
-                }
             }
         }
 

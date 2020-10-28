@@ -1,6 +1,6 @@
 ﻿using FlatFileConverter.Data;
 
-namespace FlatFilesConverter.Business.Authentication
+namespace FlatFilesConverter.Business.Services
 {
     public class UserService
     {
