@@ -58,7 +58,7 @@ namespace FlatFileConverter.Data
                 }
             }
         }
-        
+
         public static List<File> GetFileList(int userID)
         {
             string connectionString = "Server=localhost\\SQLEXPRESS;Database=FlatFilesConverter;Trusted_Connection=True;";
@@ -66,27 +66,64 @@ namespace FlatFileConverter.Data
 
             List<File> fileList = new List<File>();
 
-            using(SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                using(SqlCommand selectComm = new SqlCommand(selectCommandText, conn))
+                using (SqlCommand selectComm = new SqlCommand(selectCommandText, conn))
                 {
                     conn.Open();
                     selectComm.Parameters.AddWithValue("userID", userID);
 
                     using (SqlDataReader reader = selectComm.ExecuteReader())
                     {
-                        while(reader.Read())
+                        while (reader.Read())
                         {
-                            fileList.Add(new File() 
-                                        { FileName = reader.GetString(2), 
-                                          FileConfig = reader.GetString(3), 
-                                          CreatedDay = reader.GetDateTime(4)
-                                        });
+                            fileList.Add(new File()
+                            {
+                                FileName = reader.GetString(2),
+                                FileConfig = reader.GetString(3),
+                                CreatedDate = reader.GetDateTime(4)
+                            });
                         }
                     }
                 }
             }
             return fileList;
+        }
+
+        public static DataSet GetFileTable(string tableName)
+        {
+            string connectionString = "Server=localhost\\SQLEXPRESS;Database=FlatFilesConverter;Trusted_Connection=True;";
+            string selectCommandText = $"SELECT * FROM [dbo].[{tableName}];";
+            var file = new DataSet();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                using (SqlDataAdapter adapter = new SqlDataAdapter(selectCommandText, conn))
+                {
+                    var mappings = adapter.TableMappings.Add(tableName, tableName);
+                    conn.Open();
+                    adapter.FillSchema(file, SchemaType.Source);
+                    adapter.Fill(file);
+                }
+            }
+            return file;
+        }
+
+        public static string GetFileConfiguration(string tableName)
+        {
+            string connectionString = "Server=localhost\\SQLEXPRESS;Database=FlatFilesConverter;Trusted_Connection=True;";
+            string selectCommandText = $"SELECT Configuration FROM [dbo].[UserTableMappings] WHERE TableName='{tableName}';";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                using (SqlCommand comm = new SqlCommand(selectCommandText, conn))
+                {
+                    conn.Open();
+                    var lookUpResult = comm.ExecuteScalar();
+
+                    // check if lookUpResult equals to null
+                    return lookUpResult.ToString();
+                }
+            }
         }
     }
 }

@@ -6,6 +6,6 @@ namespace FlatFileConverter.Data
     {
         public string FileName { get; set; }
         public string FileConfig { get; set; }
-        public DateTime CreatedDay { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }

@@ -28,3 +28,8 @@ textarea {
         padding: 0;
     }
 }
+
+.files-list a {
+    color: coral;
+}
+
