@@ -1,4 +1,4 @@
-﻿  using FlatFileConverter.Data;
+﻿using FlatFileConverter.Data;
 using FlatFilesConverter.Business.Services;
 using System.Web;
 using System;
@@ -10,6 +10,25 @@ namespace FlatFilesConverter
 {
     public partial class Login : System.Web.UI.Page
     {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            string returnPath = Request.QueryString["ReturnURL"] ?? "/";
+
+            if (Session["userID"] is null && Request.Cookies["username"] is HttpCookie usernameCookie)
+            {
+                string username = Unprotect(usernameCookie.Value, "identity");
+                if (!string.IsNullOrEmpty(username))
+                {
+                    User user = UserService.GetUser(username);
+                    if (user != null)
+                    {
+                        Session["userID"] = user.UserID;
+                        Response.Redirect(returnPath);
+                    }
+                }
+            }
+        }
+
         protected void ButtonLogin_Click(object sender, EventArgs e)
         {
             var username = TextBoxLoginUsername.Text;
@@ -59,6 +78,22 @@ namespace FlatFilesConverter
             byte[] stream = Encoding.UTF8.GetBytes(text);
             byte[] encodedValue = MachineKey.Protect(stream, purpose);
             return Convert.ToBase64String(encodedValue);
+        }
+
+        public static string Unprotect(string text, string purpose)
+        {
+            if (string.IsNullOrEmpty(text)) return null;
+
+            try
+            {
+                byte[] stream = Convert.FromBase64String(text);
+                byte[] decodedValue = MachineKey.Unprotect(stream, purpose);
+                return Encoding.UTF8.GetString(decodedValue);
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

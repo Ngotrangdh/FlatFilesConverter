@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Net.Http.Headers;
 using System.Security.Cryptography;
 
 namespace FlatFileConverter.Data
@@ -128,20 +129,21 @@ namespace FlatFileConverter.Data
             }
         }
 
-        public static int HasUser(string username)
+        public static User GetUser(string username)
         {
             string connectionString = "Server=localhost\\SQLEXPRESS;Database=FlatFilesConverter;Trusted_Connection=True;";
-            string selectCommand = $"Select UserID from dbo.[User] where Username=@username";
-            var userID = 0;
+            string selectCommand = $"Select * from dbo.[User] where Username=@username";
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 using (SqlCommand comm = new SqlCommand(selectCommand, conn))
                 {
                     conn.Open();
                     comm.Parameters.AddWithValue("username", username);
-                    var lookUpResult = comm.ExecuteScalar();
-                    if (lookUpResult != null) userID = (int)lookUpResult;
-                    return userID;
+                    var reader = comm.ExecuteReader();
+
+                    return reader.HasRows
+                        ? new User { UserID = reader.GetInt32(0), Username = reader.GetString(1), Password = reader.GetString(2) }
+                        : null;
                 }
             }
         }

@@ -1,12 +1,14 @@
-﻿using FlatFilesConverter.Business.Config;
-using FlatFilesConverter.Business.Export;
-using FlatFilesConverter.Business.Import;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.SymbolStore;
+﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Newtonsoft;
+using FlatFilesConverter.Business.Config;
+using FlatFilesConverter.Business.Export;
+using FlatFilesConverter.Business.Import;
+using FlatFilesConverter.Business.Services;
+using Newtonsoft.Json;
 
 namespace FlatFilesConverter
 {
@@ -78,7 +80,7 @@ namespace FlatFilesConverter
         {
             // check and save the upload file
             var savePath = Server.MapPath("Data\\");
-
+            
             if (FileUpload.HasFile)
             {
                 savePath += Server.HtmlEncode(FileUpload.FileName);
@@ -122,8 +124,12 @@ namespace FlatFilesConverter
             var fileReader = new FileReader();
             var fixedWidthMapper = new Business.Import.FixedWidthMapper();
             var importer = new Importer(fileReader, fixedWidthMapper);
+            var userID = int.Parse(Session["userID"].ToString());
 
             var table = importer.Import(savePath, config);
+            string JSONConfig = JsonConvert.SerializeObject(config);
+
+            FileService.SaveTable(JSONConfig, userID, System.IO.Path.GetFileNameWithoutExtension(savePath), table);
 
             var CSVMapper = new Business.Export.CSVMapper();
             var writer = new Writer();

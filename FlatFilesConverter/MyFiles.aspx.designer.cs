@@ -51,6 +51,15 @@ namespace FlatFilesConverter
         protected global::System.Web.UI.WebControls.GridView GridViewFileView;
 
         /// <summary>
+        /// LabelNoFileUploaded control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LabelNoFileUploaded;
+
+        /// <summary>
         /// LabelNoTableChoosen control.
         /// </summary>
         /// <remarks>
@@ -58,14 +67,5 @@ namespace FlatFilesConverter
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label LabelNoTableChoosen;
-
-        /// <summary>
-        /// BulletedList1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.BulletedList BulletedList1;
     }
 }

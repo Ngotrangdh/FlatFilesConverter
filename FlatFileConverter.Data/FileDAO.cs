@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -10,7 +11,7 @@ namespace FlatFileConverter.Data
         public static void SaveTable(string jsonConfig, int userID, string fileName, DataTable table)
         {
             string connectionString = "Server=localhost\\SQLEXPRESS;Database=FlatFilesConverter;Trusted_Connection=True;";
-            string tableName = @fileName + '_' + DateTime.Now.Ticks.ToString();
+            string tableName = fileName + '_' + DateTime.Now.Ticks.ToString();
             var columnConfig = new List<string>();
             foreach (DataColumn column in table.Columns)
             {
@@ -125,5 +126,6 @@ namespace FlatFileConverter.Data
                 }
             }
         }
+        
     }
 }

@@ -13,9 +13,11 @@ namespace FlatFilesConverter.Business.Services
         {
             return UserDAO.RegisterUser(user);
         }
-        public static int HasUser(string username)
+
+        public static User GetUser(string username)
         {
-            return UserDAO.HasUser(username);
+            return UserDAO.GetUser(username);
         }
+         
     }
 }

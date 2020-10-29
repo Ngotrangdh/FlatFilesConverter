@@ -33,22 +33,13 @@ namespace FlatFilesConverter
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl LinkFixedWithToCSV;
 
         /// <summary>
-        /// LinkLogin control.
+        /// LinkMyFiles control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor LinkLogin;
-
-        /// <summary>
-        /// LinkRegister control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor LinkRegister;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl LinkMyFiles;
 
         /// <summary>
         /// LinkLogout control.
@@ -57,7 +48,25 @@ namespace FlatFilesConverter
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor LinkLogout;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl LinkLogout;
+
+        /// <summary>
+        /// LinkLogin control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl LinkLogin;
+
+        /// <summary>
+        /// LinkRegister control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl LinkRegister;
 
         /// <summary>
         /// MainContent control.

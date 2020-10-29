@@ -1,15 +1,13 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Newtonsoft;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 using FlatFilesConverter.Business.Config;
 using FlatFilesConverter.Business.Export;
 using FlatFilesConverter.Business.Import;
 using FlatFilesConverter.Business.Services;
-using FlatFileConverter.Data;
-using Newtonsoft.Json;
 
 namespace FlatFilesConverter
 {
@@ -81,7 +79,6 @@ namespace FlatFilesConverter
                     }
                     catch (Exception ex)
                     {
-
                         UpLoadStatusLabel.Text = ex.Message;
                     }
                 }
@@ -121,7 +118,7 @@ namespace FlatFilesConverter
             //call business code to convert file having configuration and filepath
             //import
             var CSVReader = new FileReader();
-            var CSVMapper = new Business.Import.CSVMapper(); 
+            var CSVMapper = new Business.Import.CSVMapper();
             //can i use Imapper
             var importer = new Importer(CSVReader, CSVMapper);
             var table = importer.Import(savePath, Configuration);
@@ -132,25 +129,11 @@ namespace FlatFilesConverter
             //export
             var OutputFilePath = savePath.Replace("csv", "dat");
             var FixedWidthMapper = new Business.Export.FixedWidthMapper();
-            var FixedWidthWriter = new Business.Export.Writer();
-            var Exporter = new Business.Export.Exporter(FixedWidthMapper, FixedWidthWriter);
+            var FixedWidthWriter = new Writer();
+            var Exporter = new Exporter(FixedWidthMapper, FixedWidthWriter);
             Exporter.Export(table, OutputFilePath, Configuration);
-            ViewState["OutputFilepath"] = OutputFilePath;
-        }
 
-        protected void ButtonDownload_Click(object sender, EventArgs e)
-        {
-            var OutputFilePath = ViewState["OutputFilepath"];
             Response.Redirect($"DownloadFile.ashx?filePath={OutputFilePath}");
-        }
-
-        protected void Button1_Click(object sender, EventArgs e)
-        {
-            var lines = UserDAO.ReadDB();
-            foreach (var item in lines)
-            {
-                BulletedListTable.Items.Add(item);
-            } ;
         }
     }
 }

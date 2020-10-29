@@ -21,14 +21,15 @@
         <div class="col-xs-12 col-md-8">
             <div class="row">
                 <asp:Button ID="ButtonDownloadCSV" Visible="false" runat="server" Text="Download as CSV" OnClick="ButtonDownloadCSV_Click" />
-                <asp:Button ID="ButtonDownloadFixedWidth" Visible="false" runat="server" Text="Download as Fixed Width" />
+                <asp:Button ID="ButtonDownloadFixedWidth" Visible="false" runat="server" Text="Download as Fixed Width" OnClick="ButtonDownloadFixedWidth_Click" />
             </div>
+            <br />
             <div class="row">
                 <asp:GridView CssClass="table" ID="GridViewFileView" runat="server">
                 </asp:GridView>
-                <asp:Label ID="LabelNoTableChoosen" Visible="false" runat="server" Text="Label"></asp:Label>
+                <asp:Label ID="LabelNoFileUploaded" runat="server"></asp:Label>
+                <asp:Label ID="LabelNoTableChoosen" runat="server"></asp:Label>
             </div>
         </div>
-        <asp:BulletedList ID="BulletedList1" runat="server" ></asp:BulletedList>
     </div>
 </asp:Content>

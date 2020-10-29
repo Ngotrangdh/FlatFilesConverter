@@ -24,15 +24,15 @@
         <div class="form-inline">
             <div class="form-group">
                 <label for="TextBoxFieldName">Field name *</label>
-                <asp:TextBox ID="TextBoxFieldName" runat="server"></asp:TextBox>
+                <asp:TextBox ID="TextBoxFieldName" runat="server" CssClass="form-control"></asp:TextBox>
             </div>
             <div class="form-group">
                 <label for="TextBoxColumnPosition">Column position *</label>
-                <asp:TextBox ID="TextBoxColumnPosition" runat="server"></asp:TextBox>
+                <asp:TextBox ID="TextBoxColumnPosition" runat="server" CssClass="form-control"></asp:TextBox>
             </div>
             <div class="form-group">
                 <label for="TextBoxFieldLength">Field length *</label>
-                <asp:TextBox ID="TextBoxFieldLength" runat="server"></asp:TextBox>
+                <asp:TextBox ID="TextBoxFieldLength" runat="server" CssClass="form-control"></asp:TextBox>
             </div>
             <asp:Button ID="ButtonAddRow" runat="server" Text="Add Row" CssClass="btn btn-default" OnClick="ButtonAddRow_Click" />
         </div>
@@ -54,11 +54,6 @@
         <legend>Step 3: Convert</legend>
         <asp:Button ID="ButtonConvert" runat="server" Text="Convert" OnClick="ButtonConvert_Click" />
         <br />
-        <asp:Button ID="ButtonDownload" runat="server" Text="DownLoad" OnClick="ButtonDownload_Click" />
-        <br />
-        <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="Button" />
-        <br />
-        <asp:BulletedList ID="BulletedListTable" runat="server"></asp:BulletedList>
     </fieldset>
 </asp:Content>
 

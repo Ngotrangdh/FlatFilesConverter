@@ -1,8 +1,4 @@
-﻿using FlatFilesConverter.Business.Services;
-using System;
-using System.Text;
-using System.Web;
-using System.Web.Security;
+﻿using System;
 using System.Web.UI;
 
 namespace FlatFilesConverter
@@ -11,50 +7,34 @@ namespace FlatFilesConverter
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
-            if (Page.Title.Contains("CSV To Fixed Width"))
-            {
-                LinkCSVToFixedWidth.Attributes["class"] = "active";
-            }
-            if (Page.Title.Contains("Fixed Width To CSV"))
-            {
-                LinkFixedWithToCSV.Attributes["class"] = "active";
-            }
-
-            if (Request.Cookies["username"] is HttpCookie usernameCookie)
-            {
-                string username = Unprotect(usernameCookie.Value, "identity");
-                int userID = UserService.HasUser(username);
-                if (!string.IsNullOrEmpty(username))
-                {
-                    if (userID != 0)
-                    {
-                        Session["userID"] = userID;
-                        LinkLogin.Visible = false;
-                        LinkRegister.Visible = false;
-                        LinkLogout.Visible = true;
-                    }
-                }
-            }
-            else
+            if (Session["userID"] is null)
             {
                 Response.Redirect($"~/Login.aspx?ReturnURL={Request.Url}");
             }
-        }
-
-        public static string Unprotect(string text, string purpose)
-        {
-            if (string.IsNullOrEmpty(text)) return null;
-
-            try
+            else
             {
-                byte[] stream = Convert.FromBase64String(text);
-                byte[] decodedValue = MachineKey.Unprotect(stream, purpose);
-                return Encoding.UTF8.GetString(decodedValue);
-            }
-            catch
-            {
-                return null;
+                LinkLogin.Visible = false;
+                LinkRegister.Visible = false;
+                LinkLogout.Visible = true;
+
+                switch (Request.Url.AbsolutePath)
+                {
+                    case "/CSVToFixedWidth":
+                        LinkCSVToFixedWidth.Attributes["class"] = "active";
+                        break;
+                    case "/FixedWithToCSV":
+                        LinkFixedWithToCSV.Attributes["class"] = "active";
+                        break;
+                    case "/MyFiles":
+                        LinkMyFiles.Attributes["class"] = "active";
+                        break;
+                    case "/Logout":
+                        LinkLogout.Attributes["class"] = "active";
+                        break;
+                    case "/Registration":
+                        LinkRegister.Attributes["class"] = "active";
+                        break;
+                }
             }
         }
     }

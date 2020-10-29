@@ -7,14 +7,14 @@ namespace FlatFilesConverter
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            Session.Abandon();
+
             if (Request.Cookies["username"] is HttpCookie usernameCookie)
             {
-                Session.Abandon();
                 usernameCookie.Expires = DateTime.Now.AddDays(-1);
                 Response.Cookies.Add(usernameCookie);
-                Response.Redirect("~/Login.aspx", true);
             }
-            
+
             Response.Redirect("~/Default.aspx");
         }
     }
