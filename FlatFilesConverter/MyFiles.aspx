@@ -2,7 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row">
-        <div class="col-xs-12 col-md-4">
+        <div class="col-xs-12 col-md-4 bg-info">
             <div>
                 <asp:GridView CssClass="table" AutoGenerateColumns="False" ID="GridViewFileList" runat="server" GridLines="None" ShowHeader="False">
                     <Columns>

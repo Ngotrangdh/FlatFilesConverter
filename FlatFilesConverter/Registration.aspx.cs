@@ -13,8 +13,10 @@ namespace FlatFilesConverter
 
         protected void ButtonRegister_Click(object sender, EventArgs e)
         {
-            var user = new User() { Username = TextBoxRegisterUsername.Text, Password = TextBoxRegisterPassword.Text };
-            var isRegistered = UserService.RegisterUser(user);
+            UserService UserService = new UserService();
+            User user = new User() { Username = TextBoxRegisterUsername.Text, Password = TextBoxRegisterPassword.Text };
+            bool isRegistered = UserService.RegisterUser(user);
+
             if (isRegistered)
             {
                 Response.Redirect("Login.aspx");

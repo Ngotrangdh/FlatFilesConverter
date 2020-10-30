@@ -8,9 +8,10 @@ namespace FlatFileConverter.Data
 {
     public class FileDAO
     {
-        public static void SaveTable(string jsonConfig, int userID, string fileName, DataTable table)
+        private string ConnectionString => ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+
+        public void SaveTable(string jsonConfig, int userID, string fileName, DataTable table)
         {
-            string connectionString = "Server=localhost\\SQLEXPRESS;Database=FlatFilesConverter;Trusted_Connection=True;";
             string tableName = fileName + '_' + DateTime.Now.Ticks.ToString();
             var columnConfig = new List<string>();
             foreach (DataColumn column in table.Columns)
@@ -21,7 +22,7 @@ namespace FlatFileConverter.Data
             string createTableCommandText = $"create table {tableName} ({columnParam});";
             string insertCommandString = "INSERT INTO[dbo].[UserTableMappings] ([UserID],[TableName],[Configuration],[CreatedDate]) VALUES (@userID, @tableName, @configuration, @createdDate);";
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
 
@@ -60,14 +61,13 @@ namespace FlatFileConverter.Data
             }
         }
 
-        public static List<File> GetFileList(int userID)
+        public List<File> GetFileList(int userID)
         {
-            string connectionString = "Server=localhost\\SQLEXPRESS;Database=FlatFilesConverter;Trusted_Connection=True;";
             string selectCommandText = "SELECT [TableID],[UserID],[TableName],[Configuration],[CreatedDate] FROM[dbo].[UserTableMappings] WHERE UserID=@userID";
 
             List<File> fileList = new List<File>();
 
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
                 using (SqlCommand selectComm = new SqlCommand(selectCommandText, conn))
                 {
@@ -91,12 +91,11 @@ namespace FlatFileConverter.Data
             return fileList;
         }
 
-        public static DataSet GetFileTable(string tableName)
+        public DataSet GetFileTable(string tableName)
         {
-            string connectionString = "Server=localhost\\SQLEXPRESS;Database=FlatFilesConverter;Trusted_Connection=True;";
             string selectCommandText = $"SELECT * FROM [dbo].[{tableName}];";
             var file = new DataSet();
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
                 using (SqlDataAdapter adapter = new SqlDataAdapter(selectCommandText, conn))
                 {
@@ -109,12 +108,11 @@ namespace FlatFileConverter.Data
             return file;
         }
 
-        public static string GetFileConfiguration(string tableName)
+        public string GetFileConfiguration(string tableName)
         {
-            string connectionString = "Server=localhost\\SQLEXPRESS;Database=FlatFilesConverter;Trusted_Connection=True;";
             string selectCommandText = $"SELECT Configuration FROM [dbo].[UserTableMappings] WHERE TableName='{tableName}';";
 
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
                 using (SqlCommand comm = new SqlCommand(selectCommandText, conn))
                 {

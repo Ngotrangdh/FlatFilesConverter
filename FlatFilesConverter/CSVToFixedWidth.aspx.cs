@@ -134,12 +134,14 @@ namespace FlatFilesConverter
 
             var importMapper = new Business.Import.CSVMapper();
             var exportMapper = new Business.Export.FixedWidthMapper();
-            var outputFilePath = savePath.Replace("csv", "dat");
+            var outputFileName = System.IO.Path.GetFileNameWithoutExtension(savePath) + ".dat";
+            var outputFilePath = Server.MapPath($"Data\\{outputFileName}");
             var table = ConvertFile(importMapper, savePath, config, outputFilePath, exportMapper);
 
             var userID = int.Parse(Session["userID"].ToString());
             var JSONConfig = JsonConvert.SerializeObject(config);
-            FileService.SaveTable(JSONConfig, userID, Path.GetFileNameWithoutExtension(savePath), table);
+            FileService fileService = new FileService();
+            fileService.SaveTable(JSONConfig, userID, Path.GetFileNameWithoutExtension(savePath), table);
 
             Response.Redirect($"DownloadFile.ashx?filePath={outputFilePath}");
         }

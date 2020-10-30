@@ -4,20 +4,21 @@ namespace FlatFilesConverter.Business.Services
 {
     public class UserService
     {
-        public static int IsAuthenticated(User user)
+        private UserDAO UserDAO => new UserDAO();
+
+        public int IsAuthenticated(User user)
         {
             return UserDAO.IsUserAuthenticated(user);
         }
-        
-        public static bool RegisterUser(User user)
+
+        public bool RegisterUser(User user)
         {
             return UserDAO.RegisterUser(user);
         }
 
-        public static User GetUser(string username)
+        public User GetUser(string username)
         {
             return UserDAO.GetUser(username);
         }
-         
     }
 }

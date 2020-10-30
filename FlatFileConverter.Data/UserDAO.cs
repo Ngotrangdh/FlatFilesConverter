@@ -1,46 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
-using System.Net.Http.Headers;
 using System.Security.Cryptography;
 
 namespace FlatFileConverter.Data
 {
     public class UserDAO
     {
-        public static List<string> ReadDB()
+        private string ConnectionString => ConfigurationManager.ConnectionStrings["ConnectionString"].ToString();
+        
+        public int IsUserAuthenticated(User user)
         {
-            List<string> lines = new List<string>();
-            string connectionString = "Server=localhost\\SQLEXPRESS; Database=FlatFilesConverter;Trusted_Connection=True;";
-            string queryString = "select * from dbo.Product;";
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                SqlCommand selectCommand = new SqlCommand(queryString, connection);
-                try
-                {
-                    connection.Open();
-
-                    using (SqlDataReader reader = selectCommand.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            lines.Add(reader[2].ToString());
-                        }
-                    }
-                }
-
-                catch (Exception)
-                {
-
-                    throw;
-                }
-                return lines;
-            }
-        }
-
-        public static int IsUserAuthenticated(User user)
-        {
-            string connectionString = "Server=localhost\\SQLEXPRESS;Database=FlatFilesConverter;Trusted_Connection=True;";
             string selectCommand = $"Select * from dbo.[User] where UserName=@username";
             int userID = 0;
             int userIDFromData = 0;
@@ -48,7 +18,7 @@ namespace FlatFileConverter.Data
             string passwordHashString = null;
 
             // try catch any exception during connection
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
                 using (SqlCommand comm = new SqlCommand(selectCommand, conn))
                 {
@@ -83,7 +53,7 @@ namespace FlatFileConverter.Data
             return userID;
         }
 
-        public static bool RegisterUser(User user)
+        public bool RegisterUser(User user)
         {
             int iterations = 1000;
             byte[] passwordSalt = new byte[8];
@@ -97,12 +67,11 @@ namespace FlatFileConverter.Data
             var hash = Convert.ToBase64String(passwordHash);
 
 
-            string connectionString = "Server=localhost\\SQLEXPRESS;Database=FlatFilesConverter;Trusted_Connection=True;";
             string selectCommand = $"Select Username from dbo.[User] where Username='{user.Username}'";
             string insertCommand = $"Insert into dbo.[User] values (@username, @salt, @hash)";
 
             // try catch any exception
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
                 using (SqlCommand selectComm = new SqlCommand(selectCommand, conn))
                 {
@@ -129,11 +98,10 @@ namespace FlatFileConverter.Data
             }
         }
 
-        public static User GetUser(string username)
+        public User GetUser(string username)
         {
-            string connectionString = "Server=localhost\\SQLEXPRESS;Database=FlatFilesConverter;Trusted_Connection=True;";
             string selectCommand = $"Select * from dbo.[User] where Username=@username";
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
                 using (SqlCommand comm = new SqlCommand(selectCommand, conn))
                 {

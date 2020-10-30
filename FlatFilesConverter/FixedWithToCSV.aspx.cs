@@ -124,7 +124,8 @@ namespace FlatFilesConverter
 
             var userID = int.Parse(Session["userID"].ToString());
             string JSONConfig = JsonConvert.SerializeObject(config);
-            FileService.SaveTable(JSONConfig, userID, System.IO.Path.GetFileNameWithoutExtension(savePath), table);
+            FileService fileService = new FileService();
+            fileService.SaveTable(JSONConfig, userID, System.IO.Path.GetFileNameWithoutExtension(savePath), table);
 
             Response.Redirect($"DownloadFile.ashx?filePath={outputFilePath}");
         }

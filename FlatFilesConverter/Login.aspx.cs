@@ -1,14 +1,16 @@
-﻿using FlatFileConverter.Data;
-using System;
+﻿using System;
 using System.Text;
 using System.Web;
 using System.Web.Security;
+using FlatFileConverter.Data;
 using FlatFilesConverter.Business.Services;
 
 namespace FlatFilesConverter
 {
     public partial class Login : System.Web.UI.Page
     {
+        private UserService UserService => new UserService();
+
         protected void Page_Load(object sender, EventArgs e)
         {
             string returnPath = Request.QueryString["ReturnURL"] ?? "/";

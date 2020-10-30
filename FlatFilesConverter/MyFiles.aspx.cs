@@ -12,6 +12,8 @@ namespace FlatFilesConverter
 {
     public partial class MyFiles : System.Web.UI.Page
     {
+        private FileService FileService => new FileService();
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["userID"] != null)
