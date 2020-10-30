@@ -5,8 +5,8 @@
         <legend>Step 1: Select your input </legend>
         <div class="form-group">
             <label for="FileUpload">File Input</label>
-            <asp:FileUpload ID="FileUpload" runat="server" />
-            <asp:Label ID="UpLoadStatusLabel" runat="server" />
+            <asp:FileUpload ID="FileUpload" runat="server"/>
+            <asp:Label ID="LabelFileUploadError" runat="server" ForeColor="Red" />
         </div>
         <div class="form-group">
             <label for="TextBoxDelimiter">Delimiter</label>
@@ -36,23 +36,28 @@
             </div>
             <asp:Button ID="ButtonAddRow" runat="server" Text="Add Row" CssClass="btn btn-default" OnClick="ButtonAddRow_Click" />
         </div>
+        <br />
         <asp:UpdatePanel runat="server">
             <Triggers>
                 <asp:AsyncPostBackTrigger ControlID="ButtonAddRow" />
             </Triggers>
             <ContentTemplate>
-                <asp:GridView ID="GridViewLayout" runat="server" OnRowDeleting="GridViewLayout_RowDeleting">
-                    <Columns>
-                        <asp:CommandField ShowDeleteButton="True" />
-                    </Columns>
-                </asp:GridView>
+                <asp:Label ID="LabelColumnsEmptyError" runat="server" ForeColor="Red"></asp:Label>
+                <asp:BulletedList ID="BulletedListError" runat="server" ForeColor="Red"></asp:BulletedList>
+                <div class="table-responsive-sm">
+                    <asp:GridView CssClass="table" ID="GridViewLayout" runat="server" OnRowDeleting="GridViewLayout_RowDeleting">
+                        <Columns>
+                            <asp:CommandField ShowDeleteButton="True" />
+                        </Columns>
+                    </asp:GridView>
+                </div>
             </ContentTemplate>
         </asp:UpdatePanel>
     </fieldset>
     <br />
     <fieldset>
         <legend>Step 3: Convert</legend>
-        <asp:Button ID="ButtonConvert" runat="server" Text="Convert" OnClick="ButtonConvert_Click" />
+        <asp:Button ID="ButtonConvert" runat="server" Text="Convert" OnClick="ButtonConvert_Click" CssClass="btn btn-primary" />
         <br />
     </fieldset>
 </asp:Content>

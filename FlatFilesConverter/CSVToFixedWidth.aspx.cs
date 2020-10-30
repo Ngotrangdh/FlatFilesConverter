@@ -8,6 +8,7 @@ using FlatFilesConverter.Business.Config;
 using FlatFilesConverter.Business.Export;
 using FlatFilesConverter.Business.Import;
 using FlatFilesConverter.Business.Services;
+using System.Data;
 
 namespace FlatFilesConverter
 {
@@ -22,29 +23,44 @@ namespace FlatFilesConverter
 
         protected void ButtonAddRow_Click(object sender, EventArgs e)
         {
-            if (!int.TryParse(TextBoxColumnPosition.Text, out int columnPosition))
-            {
-                Response.Write("Invalid Column Position Input");
-                return;
-            }
-
-            if (!int.TryParse(TextBoxFieldLength.Text, out int fieldLength))
-            {
-                Response.Write("Invalid Field Length Input");
-                return;
-            }
+            BulletedListError.Items.Clear();
+            LabelColumnsEmptyError.Text = string.Empty;
 
             if (string.IsNullOrWhiteSpace(TextBoxFieldName.Text))
             {
-                Response.Write("Invalid Field Name Input");
+                BulletedListError.Items.Add(new ListItem("Field name required"));
+            }
+
+            if (string.IsNullOrWhiteSpace(TextBoxColumnPosition.Text))
+            {
+                BulletedListError.Items.Add(new ListItem("Column Position required"));
+            }
+
+            if (string.IsNullOrWhiteSpace(TextBoxFieldLength.Text))
+            {
+                BulletedListError.Items.Add(new ListItem("Field length required"));
+            }
+
+            if (!int.TryParse(TextBoxColumnPosition.Text, out int _columnPosition))
+            {
+                BulletedListError.Items.Add(new ListItem("Invalid column position input"));
+            }
+
+            if (!int.TryParse(TextBoxFieldLength.Text, out int _fieldLength))
+            {
+                BulletedListError.Items.Add(new ListItem("Invalid field length input"));
+            }
+
+            if (BulletedListError.Items.Count > 0)
+            {
                 return;
             }
 
             ColumnLayout column = new ColumnLayout
             {
-                ColumnPosition = columnPosition,
-                FieldLength = fieldLength,
-                FieldName = TextBoxFieldName.Text
+                FieldName = TextBoxFieldName.Text,
+                ColumnPosition = _columnPosition,
+                FieldLength = _fieldLength
             };
             Columns.Add(column);
             BindGridView();
@@ -62,6 +78,7 @@ namespace FlatFilesConverter
             GridViewLayout.DataBind();
         }
 
+        // duplicate code
         protected void ButtonConvert_Click(object sender, EventArgs e)
         {
             string savePath = Server.MapPath("Data\\");
@@ -79,18 +96,18 @@ namespace FlatFilesConverter
                     }
                     catch (Exception ex)
                     {
-                        UpLoadStatusLabel.Text = ex.Message;
+                        LabelFileUploadError.Text = ex.Message;
                     }
                 }
-                else
+                else // need to check extension?
                 {
-                    UpLoadStatusLabel.Text = "Your file was not uploaded because it does not have .csv extension.";
+                    LabelFileUploadError.Text = "Your file was not uploaded because it does not have .csv extension.";
                 }
 
             }
             else
             {
-                UpLoadStatusLabel.Text = "You did not specify a file to upload.";
+                LabelFileUploadError.Text = "You did not specify a file to upload.";
                 return;
             }
 
@@ -108,32 +125,34 @@ namespace FlatFilesConverter
 
             bool isFirstLineHeader = CheckBoxIsFirstLineHeader.Checked;
 
-            var Configuration = new Configuration
+            var config = new Configuration
             {
                 Delimiter = delimiter,
                 IsFirstLineHeader = isFirstLineHeader,
                 ColumnLayouts = Columns
             };
 
-            //call business code to convert file having configuration and filepath
-            //import
-            var CSVReader = new FileReader();
-            var CSVMapper = new Business.Import.CSVMapper();
-            //can i use Imapper
-            var importer = new Importer(CSVReader, CSVMapper);
-            var table = importer.Import(savePath, Configuration);
+            var importMapper = new Business.Import.CSVMapper();
+            var exportMapper = new Business.Export.FixedWidthMapper();
+            var outputFilePath = savePath.Replace("csv", "dat");
+            var table = ConvertFile(importMapper, savePath, config, outputFilePath, exportMapper);
+
             var userID = int.Parse(Session["userID"].ToString());
-            var jsonConfig = JsonConvert.SerializeObject(Configuration);
-            FileService.SaveTable(jsonConfig, userID, Path.GetFileNameWithoutExtension(savePath), table);
+            var JSONConfig = JsonConvert.SerializeObject(config);
+            FileService.SaveTable(JSONConfig, userID, Path.GetFileNameWithoutExtension(savePath), table);
 
-            //export
-            var OutputFilePath = savePath.Replace("csv", "dat");
-            var FixedWidthMapper = new Business.Export.FixedWidthMapper();
-            var FixedWidthWriter = new Writer();
-            var Exporter = new Exporter(FixedWidthMapper, FixedWidthWriter);
-            Exporter.Export(table, OutputFilePath, Configuration);
+            Response.Redirect($"DownloadFile.ashx?filePath={outputFilePath}");
+        }
 
-            Response.Redirect($"DownloadFile.ashx?filePath={OutputFilePath}");
+        protected private DataTable ConvertFile(Business.Import.IMapper importMapper, string savePath, Configuration config, string outputFilePath, Business.Export.IMapper exportMapper )
+        {
+            var reader = new FileReader();
+            var writer = new Writer();
+            var importer = new Importer(reader, importMapper);
+            var exporter = new Exporter(exportMapper, writer);
+            var table = importer.Import(savePath, config);
+            exporter.Export(table, outputFilePath, config);
+            return table;
         }
     }
 }

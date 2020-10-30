@@ -37,7 +37,7 @@
             </Scripts>
         </asp:ScriptManager>
 
-        <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar navbar-default navbar-fixed-top">
             <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -48,7 +48,7 @@
                     <a class="navbar-brand" runat="server" href="~/">CSV CONVERTER</a>
                 </div>
                 <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
+                    <ul class="nav navbar-nav navbar-right">
                         <li runat="server" id="LinkCSVToFixedWidth"><a runat="server" href="~/CSVToFixedWidth">CSV To Fixed Width</a></li>
                         <li runat="server" id="LinkFixedWithToCSV"><a runat="server" href="~/FixedWithToCSV">Fixed Width To CSV</a></li>
                         <li runat="server" id="LinkMyFiles"><a runat="server" href="~/MyFiles">My Files</a></li>

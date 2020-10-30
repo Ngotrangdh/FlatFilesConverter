@@ -141,9 +141,9 @@ namespace FlatFileConverter.Data
                     comm.Parameters.AddWithValue("username", username);
                     var reader = comm.ExecuteReader();
 
-                    return reader.HasRows
-                        ? new User { UserID = reader.GetInt32(0), Username = reader.GetString(1), Password = reader.GetString(2) }
-                        : null;
+                    return reader.Read()
+                    ? new User { UserID = reader.GetInt32(0), Username = reader.GetString(1), Password = reader.GetString(2) }
+                    : null;
                 }
             }
         }

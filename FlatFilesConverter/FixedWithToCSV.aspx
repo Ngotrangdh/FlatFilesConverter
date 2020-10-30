@@ -35,6 +35,7 @@
             </div>
             <asp:Button ID="ButtonAddRow" runat="server" Text="Add Row" CssClass="btn btn-default" OnClick="ButtonAddRow_Click" />
         </div>
+        <br />
         <%--<asp:ValidationSummary ForeColor="Red" ID="ErrorSummary" runat="server" />--%>
 
         <asp:UpdatePanel runat="server">
@@ -44,12 +45,13 @@
             <ContentTemplate>
                 <asp:Label ID="LabelColumnsEmptyError" runat="server" ForeColor="Red"></asp:Label>
                 <asp:BulletedList ID="BulletedListError" runat="server" ForeColor="Red"></asp:BulletedList>
-
-                <asp:GridView ID="GridViewLayout" runat="server" OnRowDeleting="GridViewLayout_RowDeleting">
+                <div class="table-responsive-sm">
+                <asp:GridView CssClass="table" ID="GridViewLayout" runat="server" OnRowDeleting="GridViewLayout_RowDeleting">
                     <Columns>
                         <asp:CommandField ShowDeleteButton="True" />
                     </Columns>
                 </asp:GridView>
+                    </div>
             </ContentTemplate>
         </asp:UpdatePanel>
     </fieldset>
@@ -63,7 +65,7 @@
     </fieldset>
     <fieldset>
         <legend>Step 3: Convert</legend>
-        <asp:Button ID="ButtonConvert" runat="server" Text="Convert" OnClick="ButtonConvert_Click" />
+        <asp:Button ID="ButtonConvert" runat="server" Text="Convert" OnClick="ButtonConvert_Click" CssClass="btn btn-primary" />
         <br />
     </fieldset>
 

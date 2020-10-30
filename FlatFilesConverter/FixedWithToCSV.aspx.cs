@@ -9,6 +9,7 @@ using FlatFilesConverter.Business.Export;
 using FlatFilesConverter.Business.Import;
 using FlatFilesConverter.Business.Services;
 using Newtonsoft.Json;
+using System.Data;
 
 namespace FlatFilesConverter
 {
@@ -78,7 +79,6 @@ namespace FlatFilesConverter
 
         protected void ButtonConvert_Click(object sender, EventArgs e)
         {
-            // check and save the upload file
             var savePath = Server.MapPath("Data\\");
             
             if (FileUpload.HasFile)
@@ -92,14 +92,12 @@ namespace FlatFilesConverter
                 return;
             }
 
-            // check if config is entered
             if (! Columns.Any())
             {
                 LabelColumnsEmptyError.Text = "Please provide the field configuration.";
                 return;
             }
 
-            // get the config: isFirstLineHeader, delimiter, columnLayouts
             bool isFirstLineHeader = CheckBoxIsFirstLineHeader.Checked;
             char delimiter;
             if (string.IsNullOrWhiteSpace(TextBoxDelimiter.Text))
@@ -118,24 +116,28 @@ namespace FlatFilesConverter
                 ColumnLayouts = Columns
             };
 
-            // call business code
             var outputFileName = System.IO.Path.GetFileNameWithoutExtension(savePath) + ".csv";
             var outputFilePath = Server.MapPath($"Data\\{outputFileName}");
-            var fileReader = new FileReader();
-            var fixedWidthMapper = new Business.Import.FixedWidthMapper();
-            var importer = new Importer(fileReader, fixedWidthMapper);
+            var importMapper = new Business.Import.FixedWidthMapper();
+            var exportMapper = new Business.Export.CSVMapper();
+            var table = ConvertFile(importMapper, savePath, config, outputFilePath, exportMapper);
+
             var userID = int.Parse(Session["userID"].ToString());
-
-            var table = importer.Import(savePath, config);
             string JSONConfig = JsonConvert.SerializeObject(config);
-
             FileService.SaveTable(JSONConfig, userID, System.IO.Path.GetFileNameWithoutExtension(savePath), table);
 
-            var CSVMapper = new Business.Export.CSVMapper();
-            var writer = new Writer();
-            var exporter = new Exporter(CSVMapper, writer);
-            exporter.Export(table, outputFilePath, config);
             Response.Redirect($"DownloadFile.ashx?filePath={outputFilePath}");
+        }
+
+        protected private DataTable ConvertFile(Business.Import.IMapper importMapper, string savePath, Configuration config, string outputFilePath, Business.Export.IMapper exportMapper)
+        {
+            var reader = new FileReader();
+            var writer = new Writer();
+            var importer = new Importer(reader, importMapper);
+            var exporter = new Exporter(exportMapper, writer);
+            var table = importer.Import(savePath, config);
+            exporter.Export(table, outputFilePath, config);
+            return table;
         }
     }
 }

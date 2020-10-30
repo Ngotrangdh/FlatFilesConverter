@@ -24,13 +24,13 @@ namespace FlatFilesConverter
         protected global::System.Web.UI.WebControls.FileUpload FileUpload;
 
         /// <summary>
-        /// UpLoadStatusLabel control.
+        /// LabelFileUploadError control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label UpLoadStatusLabel;
+        protected global::System.Web.UI.WebControls.Label LabelFileUploadError;
 
         /// <summary>
         /// TextBoxDelimiter control.
@@ -85,6 +85,24 @@ namespace FlatFilesConverter
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button ButtonAddRow;
+
+        /// <summary>
+        /// LabelColumnsEmptyError control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LabelColumnsEmptyError;
+
+        /// <summary>
+        /// BulletedListError control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.BulletedList BulletedListError;
 
         /// <summary>
         /// GridViewLayout control.
