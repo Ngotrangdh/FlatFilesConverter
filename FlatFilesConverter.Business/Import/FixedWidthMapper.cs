@@ -16,6 +16,7 @@ namespace FlatFilesConverter.Business.Import
                 foreach (ColumnLayout column in configuration.ColumnLayouts)
                 {
                     row[column.FieldName] = line.Substring(column.ColumnPosition, column.FieldLength);
+                    // catch argument out of range exception
                 }
                 table.Rows.Add(row);
             }

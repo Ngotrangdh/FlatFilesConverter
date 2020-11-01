@@ -1,12 +1,13 @@
-﻿using FlatFileConverter.Data;
+﻿using System;
+using System.Data;
+using System.Collections.Generic;
+using System.Web.UI.WebControls;
+using Newtonsoft.Json;
+using FlatFileConverter.Data;
 using FlatFilesConverter.Business.Config;
 using FlatFilesConverter.Business.Export;
 using FlatFilesConverter.Business.Services;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Web.UI.WebControls;
+using System.Linq;
 
 namespace FlatFilesConverter
 {
@@ -29,8 +30,12 @@ namespace FlatFilesConverter
 
             if (indexToRemove > -1)
             {
+                var file = files.ElementAt(indexToRemove);
                 files.RemoveAt(indexToRemove);
+
                 //TODO: remove file from DB
+                FileService.DeleteFile(file.FileName);
+                Response.Redirect("~/MyFiles.aspx");
             }
 
             if (files.Count != 0)
@@ -38,7 +43,7 @@ namespace FlatFilesConverter
                 GridViewFileList.DataSource = files;
                 GridViewFileList.DataBind();
 
-                if (Request.QueryString["id"] is string tableName)
+                if (Request.QueryString["id"] is string tableName) //check if file exists in files list
                 {
                     ButtonDownloadCSV.Visible = true;
                     ButtonDownloadFixedWidth.Visible = true;

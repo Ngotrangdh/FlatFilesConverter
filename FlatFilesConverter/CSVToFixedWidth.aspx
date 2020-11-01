@@ -11,7 +11,8 @@
             </div>
             <div class="form-group">
                 <label for="TextBoxDelimiter">Delimiter</label>
-                <asp:TextBox ID="TextBoxDelimiter" runat="server" CssClass="form-control"></asp:TextBox>
+                <asp:TextBox ID="TextBoxDelimiter" runat="server" CssClass="form-control" Text=","></asp:TextBox>
+                <asp:Label ID="LabelDelimiterError" runat="server" ForeColor="Red"></asp:Label>
             </div>
             <div class="checkbox">
                 <label>
@@ -22,21 +23,30 @@
         </fieldset>
         <fieldset>
             <legend>Step 2: Define Field Layout</legend>
-            <div class="form-inline">
-                <div class="form-group">
-                    <label for="TextBoxFieldName">Field name *</label>
-                    <asp:TextBox ID="TextBoxFieldName" runat="server" CssClass="form-control"></asp:TextBox>
-                </div>
-                <div class="form-group">
-                    <label for="TextBoxColumnPosition">Column position *</label>
-                    <asp:TextBox ID="TextBoxColumnPosition" runat="server" CssClass="form-control"></asp:TextBox>
-                </div>
-                <div class="form-group">
-                    <label for="TextBoxFieldLength">Field length *</label>
-                    <asp:TextBox ID="TextBoxFieldLength" runat="server" CssClass="form-control"></asp:TextBox>
-                </div>
-                <asp:Button ID="ButtonAddRow" runat="server" Text="Add Row" CssClass="btn btn-default" OnClick="ButtonAddRow_Click" />
-            </div>
+
+            <asp:UpdatePanel runat="server">
+                <Triggers>
+                    <asp:AsyncPostBackTrigger ControlID="ButtonAddRow" />
+                </Triggers>
+                <ContentTemplate>
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <label for="TextBoxFieldName">Field name *</label>
+                            <asp:TextBox ID="TextBoxFieldName" runat="server" CssClass="form-control"></asp:TextBox>
+                        </div>
+                        <div class="form-group">
+                            <label for="TextBoxColumnPosition">Column position *</label>
+                            <asp:TextBox ID="TextBoxColumnPosition" runat="server" CssClass="form-control"></asp:TextBox>
+                        </div>
+                        <div class="form-group">
+                            <label for="TextBoxFieldLength">Field length *</label>
+                            <asp:TextBox ID="TextBoxFieldLength" runat="server" CssClass="form-control"></asp:TextBox>
+                        </div>
+                        <asp:Button ID="ButtonAddRow" runat="server" Text="Add Row" CssClass="btn btn-default" OnClick="ButtonAddRow_Click" />
+                    </div>
+                </ContentTemplate>
+            </asp:UpdatePanel>
+
             <br />
             <asp:UpdatePanel runat="server">
                 <Triggers>

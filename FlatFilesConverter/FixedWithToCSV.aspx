@@ -16,28 +16,37 @@
                     Is first line header
                 </label>
             </div>
-            <div class="form-inline">
-                <div class="form-group">
-                    <label for="TextBoxFieldName">Field name</label>
-                    <asp:TextBox ID="TextBoxFieldName" runat="server" CssClass="form-control"></asp:TextBox>
-                    <%--<asp:RequiredFieldValidator runat="server" ControlToValidate="TextBoxFieldName" ErrorMessage="Field name required" Text="*" ForeColor="Red"></asp:RequiredFieldValidator>--%>
-                </div>
-                <div class="form-group">
-                    <label for="TextBoxColumnPosition">Column Position</label>
-                    <asp:TextBox ID="TextBoxColumnPosition" runat="server" CssClass="form-control"></asp:TextBox>
-                    <%--<asp:RequiredFieldValidator runat="server" ControlToValidate="TextBoxColumnPosition" ErrorMessage="Column position is required" Text="**" ForeColor="Red"></asp:RequiredFieldValidator>--%>
-                    <%--<asp:RegularExpressionValidator runat="server" ValidationExpression="^\d+$" ControlToValidate="TextBoxColumnPosition" ErrorMessage="Invalid column position input" Text="*" ForeColor="Red"></asp:RegularExpressionValidator>--%>
-                </div>
-                <div class="form-group">
-                    <label for="TextBoxFieldLength">Field length</label>
-                    <asp:TextBox ID="TextBoxFieldLength" runat="server" CssClass="form-control"></asp:TextBox>
-                    <%--<asp:RequiredFieldValidator runat="server" ControlToValidate="TextBoxFieldLength" ErrorMessage="Field name is required" Text="**" ForeColor="Red"></asp:RequiredFieldValidator>--%>
-                    <%--<asp:RegularExpressionValidator runat="server" ValidationExpression="^\d+$" ControlToValidate="TextBoxFieldLength" ErrorMessage="Invalid field length input" Text="*" ForeColor="Red"></asp:RegularExpressionValidator>--%>
-                </div>
-                <asp:Button ID="ButtonAddRow" runat="server" Text="Add Row" CssClass="btn btn-default" OnClick="ButtonAddRow_Click" />
-            </div>
-            <br />
-            <%--<asp:ValidationSummary ForeColor="Red" ID="ErrorSummary" runat="server" />--%>
+
+            <asp:UpdatePanel runat="server">
+                <Triggers>
+                    <asp:AsyncPostBackTrigger ControlID="ButtonAddRow" />
+                </Triggers>
+                <ContentTemplate>
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <label for="TextBoxFieldName">Field name</label>
+                            <asp:TextBox ID="TextBoxFieldName" runat="server" CssClass="form-control"></asp:TextBox>
+                            <%--<asp:RequiredFieldValidator runat="server" ControlToValidate="TextBoxFieldName" ErrorMessage="Field name required" Text="*" ForeColor="Red"></asp:RequiredFieldValidator>--%>
+                        </div>
+                        <div class="form-group">
+                            <label for="TextBoxColumnPosition">Column Position</label>
+                            <asp:TextBox ID="TextBoxColumnPosition" runat="server" CssClass="form-control"></asp:TextBox>
+                            <%--<asp:RequiredFieldValidator runat="server" ControlToValidate="TextBoxColumnPosition" ErrorMessage="Column position is required" Text="**" ForeColor="Red"></asp:RequiredFieldValidator>--%>
+                            <%--<asp:RegularExpressionValidator runat="server" ValidationExpression="^\d+$" ControlToValidate="TextBoxColumnPosition" ErrorMessage="Invalid column position input" Text="*" ForeColor="Red"></asp:RegularExpressionValidator>--%>
+                        </div>
+                        <div class="form-group">
+                            <label for="TextBoxFieldLength">Field length</label>
+                            <asp:TextBox ID="TextBoxFieldLength" runat="server" CssClass="form-control"></asp:TextBox>
+                            <%--<asp:RequiredFieldValidator runat="server" ControlToValidate="TextBoxFieldLength" ErrorMessage="Field name is required" Text="**" ForeColor="Red"></asp:RequiredFieldValidator>--%>
+                            <%--<asp:RegularExpressionValidator runat="server" ValidationExpression="^\d+$" ControlToValidate="TextBoxFieldLength" ErrorMessage="Invalid field length input" Text="*" ForeColor="Red"></asp:RegularExpressionValidator>--%>
+                        </div>
+                        <asp:Button ID="ButtonAddRow" runat="server" Text="Add Row" CssClass="btn btn-default" OnClick="ButtonAddRow_Click" />
+                    </div>
+                    <br />
+                    <%--<asp:ValidationSummary ForeColor="Red" ID="ErrorSummary" runat="server" />--%>
+                </ContentTemplate>
+            </asp:UpdatePanel>
+
 
             <asp:UpdatePanel runat="server">
                 <Triggers>
@@ -61,7 +70,9 @@
             <legend>Step 2: Define Output Delimiter</legend>
             <div class="form-group">
                 <label for="TextBoxDelimiter">Delimiter</label>
-                <asp:TextBox ID="TextBoxDelimiter" runat="server" CssClass="form-control"></asp:TextBox>
+                <asp:TextBox ID="TextBoxDelimiter" runat="server" CssClass="form-control" Text=","></asp:TextBox>
+                <asp:Label ID="LabelDelimiterError" runat="server" ForeColor="Red"></asp:Label>
+
             </div>
         </fieldset>
         <fieldset>

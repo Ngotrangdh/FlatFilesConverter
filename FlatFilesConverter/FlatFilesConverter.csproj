@@ -110,6 +110,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Site.css" />
+    <Content Include="ErrorPage.aspx" />
     <Content Include="FixedWithToCSV.aspx" />
     <Content Include="CSVToFixedWidth.aspx" />
     <Content Include="Default.aspx" />
@@ -169,6 +170,13 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="DownloadFile.ashx.cs">
       <DependentUpon>DownloadFile.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="ErrorPage.aspx.cs">
+      <DependentUpon>ErrorPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ErrorPage.aspx.designer.cs">
+      <DependentUpon>ErrorPage.aspx</DependentUpon>
     </Compile>
     <Compile Include="FixedWithToCSV.aspx.cs">
       <DependentUpon>FixedWithToCSV.aspx</DependentUpon>

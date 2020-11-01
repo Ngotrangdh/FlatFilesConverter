@@ -27,5 +27,10 @@ namespace FlatFilesConverter.Business.Services
         {
             return FileDAO.GetFileConfiguration(fileName);
         }
+
+        public void DeleteFile(string fileName)
+        {
+            FileDAO.DeleteTable(fileName);
+        }
     }
 }

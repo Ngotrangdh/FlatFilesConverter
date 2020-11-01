@@ -64,6 +64,10 @@ namespace FlatFilesConverter
             };
             Columns.Add(column);
             BindGridView();
+            TextBoxFieldName.Text = string.Empty;
+            TextBoxFieldName.Focus();
+            TextBoxColumnPosition.Text = string.Empty;
+            TextBoxFieldLength.Text = string.Empty;
         }
 
         protected void GridViewLayout_RowDeleting(object sender, GridViewDeleteEventArgs e)
@@ -99,11 +103,10 @@ namespace FlatFilesConverter
                         LabelFileUploadError.Text = ex.Message;
                     }
                 }
-                else // need to check extension?
+                else
                 {
                     LabelFileUploadError.Text = "Your file was not uploaded because it does not have .csv extension.";
                 }
-
             }
             else
             {
@@ -118,9 +121,14 @@ namespace FlatFilesConverter
             {
                 delimiter = ',';
             }
-            else
+            else if (TextBoxDelimiter.Text.Length == 1)
             {
                 delimiter = TextBoxDelimiter.Text[0];
+            }
+            else
+            {
+                LabelDelimiterError.Text = "Delimiter has to be a character";
+                return;
             }
 
             bool isFirstLineHeader = CheckBoxIsFirstLineHeader.Checked;

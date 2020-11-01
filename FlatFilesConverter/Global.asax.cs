@@ -17,5 +17,15 @@ namespace FlatFilesConverter
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
+        
+        void Application_Error(object sender, EventArgs e)
+        {
+            Exception exc = Server.GetLastError();
+
+            if (exc is HttpUnhandledException)
+            {
+                Server.Transfer("~/ErrorPage.aspx?handler=Application_Error%20-%20Global.asax", true);
+            }
+        }
     }
 }

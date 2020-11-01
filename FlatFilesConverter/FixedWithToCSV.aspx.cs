@@ -63,6 +63,10 @@ namespace FlatFilesConverter
 
             Columns.Add(ColumnLayout);
             BindGridView();
+            TextBoxFieldName.Text = string.Empty;
+            TextBoxFieldName.Focus();
+            TextBoxColumnPosition.Text = string.Empty;
+            TextBoxFieldLength.Text = string.Empty;
         }
 
         private void BindGridView()
@@ -99,14 +103,20 @@ namespace FlatFilesConverter
             }
 
             bool isFirstLineHeader = CheckBoxIsFirstLineHeader.Checked;
+
             char delimiter;
             if (string.IsNullOrWhiteSpace(TextBoxDelimiter.Text))
             {
                 delimiter = ',';
             }
-            else
+            else if (TextBoxDelimiter.Text.Length == 1)
             {
                 delimiter = TextBoxDelimiter.Text[0];
+            }
+            else
+            {
+                LabelDelimiterError.Text = "Delimiter has to be a character.";
+                return;
             }
 
             var config = new Configuration

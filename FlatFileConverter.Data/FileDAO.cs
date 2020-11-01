@@ -125,5 +125,27 @@ namespace FlatFileConverter.Data
             }
         }
         
+        public void DeleteTable(string fileName)
+        {
+            string deleteCommUserTableMappings = "DELETE FROM [dbo].[UserTableMappings] WHERE TableName=@tableName";
+            string dropCommTable = $"DROP TABLE[dbo].[{fileName}]";
+
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+                
+                using (SqlCommand comm = new SqlCommand(deleteCommUserTableMappings, conn))
+                {
+                    comm.Parameters.AddWithValue("tableName", fileName);
+                    comm.ExecuteNonQuery();
+                }
+
+                using(SqlCommand comm = new SqlCommand(dropCommTable, conn))
+                {
+                    comm.ExecuteNonQuery();
+                }
+            }
+
+        }
     }
 }
