@@ -1,12 +1,12 @@
-﻿using System;
-using System.Data;
-using System.Collections.Generic;
-using Newtonsoft;
-using FlatFileConverter.Data;
-using FlatFilesConverter.Business.Services;
-using Newtonsoft.Json;
+﻿using FlatFileConverter.Data;
 using FlatFilesConverter.Business.Config;
 using FlatFilesConverter.Business.Export;
+using FlatFilesConverter.Business.Services;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Web.UI.WebControls;
 
 namespace FlatFilesConverter
 {
@@ -18,30 +18,41 @@ namespace FlatFilesConverter
         {
             if (Session["userID"] != null)
             {
-                int userID = int.Parse(Session["userID"].ToString());
-                List<File> files = FileService.GetFileList(userID);
+                GetData(-1);
+            }
+        }
 
-                if (files.Count != 0)
+        private void GetData(int indexToRemove)
+        {
+            int userID = int.Parse(Session["userID"].ToString());
+            List<File> files = FileService.GetFileList(userID);
+
+            if (indexToRemove > -1)
+            {
+                files.RemoveAt(indexToRemove);
+                //TODO: remove file from DB
+            }
+
+            if (files.Count != 0)
+            {
+                GridViewFileList.DataSource = files;
+                GridViewFileList.DataBind();
+
+                if (Request.QueryString["id"] is string tableName)
                 {
-                    GridViewFileList.DataSource = files;
-                    GridViewFileList.DataBind();
-
-                    if (Request.QueryString["id"] is string tableName)
-                    {
-                        ButtonDownloadCSV.Visible = true;
-                        ButtonDownloadFixedWidth.Visible = true;
-                        GridViewFileView.DataSource = FileService.GetFileTable(tableName);
-                        GridViewFileView.DataBind();
-                    }
-                    else
-                    {
-                        LabelNoTableChoosen.Text = "Please select a table on the left.";
-                    }
+                    ButtonDownloadCSV.Visible = true;
+                    ButtonDownloadFixedWidth.Visible = true;
+                    GridViewFileView.DataSource = FileService.GetFileTable(tableName);
+                    GridViewFileView.DataBind();
                 }
                 else
                 {
-                    LabelNoFileUploaded.Text = "You have not uploaded any files.";
+                    LabelNoTableChoosen.Text = "Please select a file";
                 }
+            }
+            else
+            {
+                LabelNoFileUploaded.Text = "You have not uploaded any files.";
             }
         }
 
@@ -77,5 +88,9 @@ namespace FlatFilesConverter
             Response.Redirect($"DownloadFile.ashx?filePath={outputFilePath}");
         }
 
+        protected void GridViewFileList_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        {
+            GetData(e.RowIndex);
+        }
     }
 }
