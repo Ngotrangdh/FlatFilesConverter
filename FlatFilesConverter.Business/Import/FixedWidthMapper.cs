@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using FlatFilesConverter.Business.Config;
 using FlatFilesConverter.Core.Utililies;
+using System;
 
 namespace FlatFilesConverter.Business.Import
 {
@@ -16,8 +17,6 @@ namespace FlatFilesConverter.Business.Import
                 DataRow row = table.NewRow();
                 foreach (ColumnLayout column in configuration.ColumnLayouts)
                 {
-                    // try catch exception
-                    
                     row[column.FieldName] = line.SubStr(column.ColumnPosition, column.FieldLength);
                 }
                 table.Rows.Add(row);

@@ -1,8 +1,6 @@
-
-using FlatFilesConverter.Business.Config;
 using System.Collections.Generic;
 using System.Data;
-using FlatFileConverter.Data;
+using FlatFilesConverter.Business.Config;
 
 namespace FlatFilesConverter.Business.Import
 {

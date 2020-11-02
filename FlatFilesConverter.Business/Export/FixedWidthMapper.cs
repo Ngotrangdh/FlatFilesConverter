@@ -19,26 +19,23 @@ namespace FlatFilesConverter.Business.Export
                 {
                     parts.Add(row[column].ToString());
                 }
-                var line = createFixedWidthLine(parts, configuration.ColumnLayouts);
+                var line = CreateFixedWidthLine(parts, configuration.ColumnLayouts);
                 lines.Add(line);
             }
             return lines;
         }
 
-        private string createFixedWidthLine(List<string> parts, List<ColumnLayout> columns)
+        private string CreateFixedWidthLine(List<string> parts, List<ColumnLayout> columns)
         {
-            if (parts.Count != columns.Count)
-            {
-                throw new Exception("Cannot parse file with the given config");
-            }
-            // var fixedWidthPart = new List<string>();
-            // for (var i = 0; i < parts.Count; i++)
-            // {
-            //     var part = parts[i].PadRight(columns[i].Width, ' ');
-            //     fixedWidthPart.Add(part);
-            // }
-            // var line = string.Join(string.Empty, fixedWidthPart);
-            var arr = parts.Select((part, i) => part.PadRight(columns[i].FieldLength, ' '));
+            //TODO: test unordered list
+            List<ColumnLayout> sortedColumns = columns.OrderBy(c => c.ColumnPosition).ToList();
+            
+            //if (parts.Count != columns.Count)
+            //{
+            //    throw new Exception("Cannot parse file with the given config");
+            //}
+
+            var arr = parts.Select((part, i) => part.PadRight(sortedColumns[i].FieldLength, ' '));
             var line = string.Join(string.Empty, arr);
             return line;
         }

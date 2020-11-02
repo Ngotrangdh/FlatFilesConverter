@@ -92,7 +92,6 @@ namespace FlatFilesConverter
             GridViewLayout.DataBind();
         }
 
-        // duplicate code
         protected void ButtonConvert_Click(object sender, EventArgs e)
         {
             string savePath = Server.MapPath("Data\\");
@@ -154,7 +153,13 @@ namespace FlatFilesConverter
             var exportMapper = new Business.Export.FixedWidthMapper();
             var outputFileName = System.IO.Path.GetFileNameWithoutExtension(savePath) + ".dat";
             var outputFilePath = Server.MapPath($"Data\\{outputFileName}");
+
             var table = ConvertFile(importMapper, savePath, config, outputFilePath, exportMapper);
+
+            if (table is null)
+            {
+                return;
+            }
 
             var userID = int.Parse(Session["userID"].ToString());
             var JSONConfig = JsonConvert.SerializeObject(config);
@@ -164,14 +169,27 @@ namespace FlatFilesConverter
             Response.Redirect($"DownloadFile.ashx?filePath={outputFilePath}");
         }
 
-        protected private DataTable ConvertFile(Business.Import.IMapper importMapper, string savePath, Configuration config, string outputFilePath, Business.Export.IMapper exportMapper )
+        protected private DataTable ConvertFile(Business.Import.IMapper importMapper, string savePath, Configuration config, string outputFilePath, Business.Export.IMapper exportMapper)
         {
             var reader = new FileReader();
             var writer = new Writer();
             var importer = new Importer(reader, importMapper);
             var exporter = new Exporter(exportMapper, writer);
-            var table = importer.Import(savePath, config);
+
+            DataTable table = new DataTable();
+
+            try
+            {
+                table = importer.Import(savePath, config);
+            }
+            catch (Exception ex)
+            {
+                BulletedListError.Items.Add(new ListItem(ex.Message));
+                return null;
+            }
+            
             exporter.Export(table, outputFilePath, config);
+
             return table;
         }
     }

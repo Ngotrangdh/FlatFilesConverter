@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using FlatFilesConverter.Business.Config;
 
 namespace FlatFilesConverter.Business.Import
@@ -15,6 +17,11 @@ namespace FlatFilesConverter.Business.Import
             {
                 DataRow row = table.NewRow();
                 string[] parts = line.Split(configuration.Delimiter);
+
+                if (parts.Count() != columns.Count())
+                {
+                    throw new Exception("Cannot convert the file with the given configuration.");
+                }
 
                 for (var i = 0; i < parts.Length; i++)
                 {

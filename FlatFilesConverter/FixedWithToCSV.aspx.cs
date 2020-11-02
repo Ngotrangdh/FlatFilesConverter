@@ -1,15 +1,14 @@
 ﻿using System;
+using System.Data;
 using System.Linq;
 using System.Collections.Generic;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Newtonsoft;
+using Newtonsoft.Json;
 using FlatFilesConverter.Business.Config;
 using FlatFilesConverter.Business.Export;
 using FlatFilesConverter.Business.Import;
 using FlatFilesConverter.Business.Services;
-using Newtonsoft.Json;
-using System.Data;
 
 namespace FlatFilesConverter
 {
@@ -49,12 +48,12 @@ namespace FlatFilesConverter
                 BulletedListError.Items.Add(new ListItem("Field length has to be a positive number."));
             }
 
-            if (_columnPosition < 0 )
+            if (_columnPosition < 0)
             {
                 BulletedListError.Items.Add(new ListItem("Column position has to be 0 or a postive number."));
             }
 
-            if ( _fieldLength < 0)
+            if (_fieldLength < 0)
             {
                 BulletedListError.Items.Add(new ListItem("Field length has to be a positive number."));
 
@@ -95,7 +94,7 @@ namespace FlatFilesConverter
         protected void ButtonConvert_Click(object sender, EventArgs e)
         {
             var savePath = Server.MapPath("Data\\");
-            
+
             if (FileUpload.HasFile)
             {
                 savePath += Server.HtmlEncode(FileUpload.FileName);
@@ -107,7 +106,7 @@ namespace FlatFilesConverter
                 return;
             }
 
-            if (! Columns.Any())
+            if (!Columns.Any())
             {
                 LabelColumnsEmptyError.Text = "Please provide the field configuration.";
                 return;
@@ -141,7 +140,13 @@ namespace FlatFilesConverter
             var outputFilePath = Server.MapPath($"Data\\{outputFileName}");
             var importMapper = new Business.Import.FixedWidthMapper();
             var exportMapper = new Business.Export.CSVMapper();
+            
             var table = ConvertFile(importMapper, savePath, config, outputFilePath, exportMapper);
+
+            if (table is null)
+            {
+                return;
+            }
 
             var userID = int.Parse(Session["userID"].ToString());
             string JSONConfig = JsonConvert.SerializeObject(config);
@@ -157,7 +162,16 @@ namespace FlatFilesConverter
             var writer = new Writer();
             var importer = new Importer(reader, importMapper);
             var exporter = new Exporter(exportMapper, writer);
-            var table = importer.Import(savePath, config);
+            var table = new DataTable();
+            try
+            {
+                table = importer.Import(savePath, config);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                BulletedListError.Items.Add(new ListItem("Column position cannot be greater than the length of each line."));
+                return null;
+            }
             exporter.Export(table, outputFilePath, config);
             return table;
         }
