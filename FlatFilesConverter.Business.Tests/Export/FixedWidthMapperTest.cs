@@ -10,7 +10,7 @@ namespace FlatFilesConverter.Export.Tests
     public class FixedWidthMapperTest
     {
         [Fact]
-        public void MapWhenConfigLegal()
+        public void MapWhenConfigValidAndInOrder()
         {
             var table = new DataTable();
             DataColumn[] cols = {

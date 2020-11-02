@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FlatFileConverter.Data\FlatFileConverter.Data.csproj" />
+    <ProjectReference Include="..\FlatFileConverter.Data\FlatFilesConverter.Data.csproj" />
     <ProjectReference Include="..\FlatFilesConverter.Core\FlatFilesConverter.Core.csproj" />
   </ItemGroup>
 

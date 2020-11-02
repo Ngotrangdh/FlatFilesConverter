@@ -1,5 +1,5 @@
 ﻿using System;
-using FlatFileConverter.Data;
+using FlatFilesConverter.Data;
 using FlatFilesConverter.Business.Services;
 
 namespace FlatFilesConverter

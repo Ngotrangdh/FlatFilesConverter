@@ -9,9 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlatFilesConverter.Business
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlatFilesConverter.Business.Tests", "FlatFilesConverter.Business.Tests\FlatFilesConverter.Business.Tests.csproj", "{FAFA249A-7C71-4C6C-AED8-BB0C9BA00700}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlatFileConverter.Data", "FlatFileConverter.Data\FlatFileConverter.Data.csproj", "{9EDDC41A-6B43-403A-BCF1-A1E467638397}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlatFilesConverter.Data", "FlatFileConverter.Data\FlatFilesConverter.Data.csproj", "{9EDDC41A-6B43-403A-BCF1-A1E467638397}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlatFilesConverter.Core", "FlatFilesConverter.Core\FlatFilesConverter.Core.csproj", "{7B8A275D-2261-45B2-97C6-5C0055F48C9D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlatFilesConverter.Core.Tests", "FlatFilesConverter.Core.Tests\FlatFilesConverter.Core.Tests.csproj", "{D067FB94-3461-49C0-A6C5-77C7F281744B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{7B8A275D-2261-45B2-97C6-5C0055F48C9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B8A275D-2261-45B2-97C6-5C0055F48C9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B8A275D-2261-45B2-97C6-5C0055F48C9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D067FB94-3461-49C0-A6C5-77C7F281744B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D067FB94-3461-49C0-A6C5-77C7F281744B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D067FB94-3461-49C0-A6C5-77C7F281744B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D067FB94-3461-49C0-A6C5-77C7F281744B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

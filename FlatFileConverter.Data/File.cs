@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FlatFileConverter.Data
+namespace FlatFilesConverter.Data
 {
     public class File
     {

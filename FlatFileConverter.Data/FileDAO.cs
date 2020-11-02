@@ -4,7 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 
-namespace FlatFileConverter.Data
+namespace FlatFilesConverter.Data
 {
     public class FileDAO
     {

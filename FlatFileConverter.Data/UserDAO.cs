@@ -3,7 +3,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Security.Cryptography;
 
-namespace FlatFileConverter.Data
+namespace FlatFilesConverter.Data
 {
     public class UserDAO
     {

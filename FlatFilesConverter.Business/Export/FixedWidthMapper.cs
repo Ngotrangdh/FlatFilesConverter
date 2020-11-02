@@ -27,15 +27,12 @@ namespace FlatFilesConverter.Business.Export
 
         private string CreateFixedWidthLine(List<string> parts, List<ColumnLayout> columns)
         {
-            //TODO: test unordered list
-            List<ColumnLayout> sortedColumns = columns.OrderBy(c => c.ColumnPosition).ToList();
-            
-            //if (parts.Count != columns.Count)
-            //{
-            //    throw new Exception("Cannot parse file with the given config");
-            //}
+            if (parts.Count != columns.Count)
+            {
+                throw new Exception("Cannot parse file with the given config");
+            }
 
-            var arr = parts.Select((part, i) => part.PadRight(sortedColumns[i].FieldLength, ' '));
+            var arr = parts.Select((part, i) => part.PadRight(columns[i].FieldLength, ' '));
             var line = string.Join(string.Empty, arr);
             return line;
         }

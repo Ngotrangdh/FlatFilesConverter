@@ -277,9 +277,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FlatFileConverter.Data\FlatFileConverter.Data.csproj">
+    <ProjectReference Include="..\FlatFileConverter.Data\FlatFilesConverter.Data.csproj">
       <Project>{9eddc41a-6b43-403a-bcf1-a1e467638397}</Project>
-      <Name>FlatFileConverter.Data</Name>
+      <Name>FlatFilesConverter.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\FlatFilesConverter.Business\FlatFilesConverter.Business.csproj">
       <Project>{c9b6f3ea-05ad-4b95-93d9-875a12f2a05b}</Project>

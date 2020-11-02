@@ -1,4 +1,4 @@
-﻿using FlatFileConverter.Data;
+﻿using FlatFilesConverter.Data;
 
 namespace FlatFilesConverter.Business.Services
 {

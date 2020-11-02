@@ -1,6 +1,6 @@
 ﻿using System.Data;
 using System.Collections.Generic;
-using FlatFileConverter.Data;
+using FlatFilesConverter.Data;
 
 namespace FlatFilesConverter.Business.Services
 {
