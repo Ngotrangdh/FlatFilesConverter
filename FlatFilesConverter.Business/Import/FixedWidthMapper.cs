@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
+using System.Collections.Generic;
 using FlatFilesConverter.Business.Config;
+using FlatFilesConverter.Core.Utililies;
 
 namespace FlatFilesConverter.Business.Import
 {
@@ -15,12 +16,12 @@ namespace FlatFilesConverter.Business.Import
                 DataRow row = table.NewRow();
                 foreach (ColumnLayout column in configuration.ColumnLayouts)
                 {
-                    row[column.FieldName] = line.Substring(column.ColumnPosition, column.FieldLength);
-                    // catch argument out of range exception
+                    // try catch exception
+                    
+                    row[column.FieldName] = line.SubStr(column.ColumnPosition, column.FieldLength);
                 }
                 table.Rows.Add(row);
             }
-
             return table;
         }
     }

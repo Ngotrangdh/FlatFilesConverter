@@ -7,7 +7,7 @@ namespace FlatFilesConverter.Business.Export
     {
         public void Write(List<string> lines, string filePath)
         {
-            using (StreamWriter writer = File.AppendText(filePath))
+            using (StreamWriter writer = new StreamWriter(filePath))
             {
                 foreach (var line in lines)
                 {

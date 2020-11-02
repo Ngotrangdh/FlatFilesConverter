@@ -15,7 +15,7 @@ namespace FlatFilesConverter
 
             if (exc != null)
             {
-                Error.Text = exc.InnerException.Message;
+                ServerError.Text = exc.InnerException.Message;
             }
         }
     }

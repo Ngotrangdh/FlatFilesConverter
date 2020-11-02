@@ -9,7 +9,7 @@
 <body>
     <form id="form1" runat="server">
         <div>
-            <asp:Label ID="Error" runat="server" ForeColor="Red"></asp:Label>
+            <asp:Label ID="ServerError" runat="server" ForeColor="Red"></asp:Label>
         </div>
         <asp:LinkButton ID="LinkButtonToHomePage" runat="server" PostBackUrl="Default.aspx">Return to Home page</asp:LinkButton>
     </form>

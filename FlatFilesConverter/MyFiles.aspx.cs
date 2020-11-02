@@ -23,7 +23,32 @@ namespace FlatFilesConverter
             }
         }
 
-        private void GetData(int indexToRemove)
+        protected void ButtonDownloadCSV_Click(object sender, EventArgs e)
+        {
+            if (Request.QueryString["id"] is string fileName)
+            {
+                var CSVMapper = new CSVMapper();
+                string outputFilePath = Server.MapPath($"Data\\{fileName}.csv");
+                GenerateDownloadedCSVFile(fileName, CSVMapper, outputFilePath);
+            }
+        }
+
+        protected void ButtonDownloadFixedWidth_Click(object sender, EventArgs e)
+        {
+            if (Request.QueryString["id"] is string fileName)
+            {
+                var fixedWidthMapper = new FixedWidthMapper();
+                string outputFilePath = Server.MapPath($"Data\\{fileName}.dat");
+                GenerateDownloadedCSVFile(fileName, fixedWidthMapper, outputFilePath);
+            }
+        }
+
+        protected void GridViewFileList_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        {
+            GetData(e.RowIndex);
+        }
+        
+        protected private void GetData(int indexToRemove)
         {
             int userID = int.Parse(Session["userID"].ToString());
             List<File> files = FileService.GetFileList(userID);
@@ -61,26 +86,6 @@ namespace FlatFilesConverter
             }
         }
 
-        protected void ButtonDownloadCSV_Click(object sender, EventArgs e)
-        {
-            if (Request.QueryString["id"] is string fileName)
-            {
-                var CSVMapper = new CSVMapper();
-                string outputFilePath = Server.MapPath($"Data\\{fileName}.csv");
-                GenerateDownloadedCSVFile(fileName, CSVMapper, outputFilePath);
-            }
-        }
-
-        protected void ButtonDownloadFixedWidth_Click(object sender, EventArgs e)
-        {
-            if (Request.QueryString["id"] is string fileName)
-            {
-                var fixedWidthMapper = new FixedWidthMapper();
-                string outputFilePath = Server.MapPath($"Data\\{fileName}.dat");
-                GenerateDownloadedCSVFile(fileName, fixedWidthMapper, outputFilePath);
-            }
-        }
-
         protected private void GenerateDownloadedCSVFile(string fileName, IMapper mapper, string outputFilePath)
         {
             DataTable table = FileService.GetFileTable(fileName).Tables[0];
@@ -93,9 +98,5 @@ namespace FlatFilesConverter
             Response.Redirect($"DownloadFile.ashx?filePath={outputFilePath}");
         }
 
-        protected void GridViewFileList_RowDeleting(object sender, GridViewDeleteEventArgs e)
-        {
-            GetData(e.RowIndex);
-        }
     }
 }

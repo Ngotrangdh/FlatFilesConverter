@@ -26,27 +26,38 @@ namespace FlatFilesConverter
 
             if (string.IsNullOrWhiteSpace(TextBoxFieldName.Text))
             {
-                BulletedListError.Items.Add(new ListItem("Field name required"));
+                BulletedListError.Items.Add(new ListItem("Field name required."));
             }
 
             if (string.IsNullOrWhiteSpace(TextBoxColumnPosition.Text))
             {
-                BulletedListError.Items.Add(new ListItem("Column Position required"));
+                BulletedListError.Items.Add(new ListItem("Column Position required."));
             }
 
             if (string.IsNullOrWhiteSpace(TextBoxFieldLength.Text))
             {
-                BulletedListError.Items.Add(new ListItem("Field length required"));
+                BulletedListError.Items.Add(new ListItem("Field length required."));
             }
 
             if (!int.TryParse(TextBoxColumnPosition.Text, out int _columnPosition))
             {
-                BulletedListError.Items.Add(new ListItem("Invalid column position input"));
+                BulletedListError.Items.Add(new ListItem("Column position has to be 0 or a postive number."));
             }
 
             if (!int.TryParse(TextBoxFieldLength.Text, out int _fieldLength))
             {
-                BulletedListError.Items.Add(new ListItem("Invalid field length input"));
+                BulletedListError.Items.Add(new ListItem("Field length has to be a positive number."));
+            }
+
+            if (_columnPosition < 0 )
+            {
+                BulletedListError.Items.Add(new ListItem("Column position has to be 0 or a postive number."));
+            }
+
+            if ( _fieldLength < 0)
+            {
+                BulletedListError.Items.Add(new ListItem("Field length has to be a positive number."));
+
             }
 
             if (BulletedListError.Items.Count > 0)
