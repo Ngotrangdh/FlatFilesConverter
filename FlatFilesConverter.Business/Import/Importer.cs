@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using FlatFilesConverter.Business.Config;
@@ -6,13 +7,13 @@ namespace FlatFilesConverter.Business.Import
 {
     public class Importer
     {
-        private IFileReader _fileReader;
-        private IMapper _mapper;
+        private readonly IFileReader _fileReader;
+        private readonly IMapper _mapper;
 
         public Importer(IFileReader fileReader, IMapper mapper)
         {
-            _fileReader = fileReader;
-            _mapper = mapper;
+            _fileReader = fileReader ?? throw new ArgumentNullException(nameof(fileReader));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public DataTable Import(string filePath, Configuration configuration)

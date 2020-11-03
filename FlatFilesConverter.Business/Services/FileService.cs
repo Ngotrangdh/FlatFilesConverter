@@ -1,36 +1,45 @@
 ﻿using System.Data;
 using System.Collections.Generic;
 using FlatFilesConverter.Data;
+using System;
 
 namespace FlatFilesConverter.Business.Services
 {
     public class FileService
     {
-        private FileDAO FileDAO => new FileDAO();
-        
+        private readonly IFileDAO _fileDAO;
+
+        public FileService() : this(new FileDAO())
+        { }
+
+        public FileService(IFileDAO fileDAO)
+        {
+            _fileDAO = fileDAO ?? throw new ArgumentNullException(nameof(fileDAO));
+        }
+
         public void SaveTable(string jsonConfig, int userID, string fileName, DataTable table)
         {
-            FileDAO.SaveTable(jsonConfig, userID, fileName, table);
+            _fileDAO.SaveTable(jsonConfig, userID, fileName, table);
         }
 
         public List<File> GetFileList(int userID)
         {
-            return FileDAO.GetFileList(userID);
+            return _fileDAO.GetFileList(userID);
         }
 
         public DataSet GetFileTable(string tableName)
         {
-            return FileDAO.GetFileTable(tableName);
+            return _fileDAO.GetFileTable(tableName);
         }
 
         public string GetFileConfiguration(string fileName)
         {
-            return FileDAO.GetFileConfiguration(fileName);
+            return _fileDAO.GetFileConfiguration(fileName);
         }
 
         public void DeleteFile(string fileName)
         {
-            FileDAO.DeleteTable(fileName);
+            _fileDAO.DeleteTable(fileName);
         }
     }
 }

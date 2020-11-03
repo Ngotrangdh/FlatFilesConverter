@@ -44,7 +44,6 @@ namespace FlatFilesConverter.Import.Tests
 
             var mockFileReader = new Mock<IFileReader>();
             mockFileReader.Setup(reader => reader.Read(It.IsAny<FileReaderOption>())).Returns(lines).Verifiable();
-            // if replace It.isAny with option => test fail
             var mockMapper = new Mock<IMapper>();
             mockMapper.Setup(mapper => mapper.Map(lines, config)).Returns(expectedTable).Verifiable();
 

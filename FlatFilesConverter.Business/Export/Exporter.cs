@@ -10,8 +10,8 @@ namespace FlatFilesConverter.Business.Export
 
         public Exporter(IMapper mapper, IWriter writer)
         {
-            _mapper = mapper;
-            _writer = writer;
+            _mapper = mapper ?? throw new System.ArgumentNullException(nameof(mapper));
+            _writer = writer ?? throw new System.ArgumentNullException(nameof(writer));
         }
 
         public void Export(DataTable table, string filePath, Configuration configuration)
