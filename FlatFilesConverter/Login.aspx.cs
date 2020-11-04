@@ -36,7 +36,7 @@ namespace FlatFilesConverter
             var password = TextBoxLoginPassword.Text;
             bool isPersistentCookie = CheckBoxRememberMe.Checked;
             User user = new User() { Username = username, Password = password };
-            string userID = UserService.IsAuthenticated(user).ToString();
+            string userID = UserService.AuthenticateUser(user).ToString();
 
             string returnPath = Request.QueryString["ReturnURL"];
 

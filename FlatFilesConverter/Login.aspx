@@ -10,7 +10,7 @@
                 <div class="panel-body">
                     <div class="form-group">
                         <label for="TextBoxLoginUsername">Username *</label>
-                        <asp:TextBox ID="TextBoxLoginUsername" runat="server" CssClass="form-control" autofocus="autofocus" required="required" placeholder="Email" />
+                        <asp:TextBox ID="TextBoxLoginUsername" runat="server" CssClass="form-control" autofocus="autofocus" required="required" placeholder="Username" />
                         <asp:RequiredFieldValidator ControlToValidate="TextBoxLoginUsername" CssClass="text-danger" runat="server" ErrorMessage="Username is required!"></asp:RequiredFieldValidator>
                     </div>
                     <div class="form-group">

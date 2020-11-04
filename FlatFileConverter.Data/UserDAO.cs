@@ -5,17 +5,14 @@ using System.Security.Cryptography;
 
 namespace FlatFilesConverter.Data
 {
-    public class UserDAO
+    public class UserDAO : IUserDAO
     {
         private string ConnectionString => ConfigurationManager.ConnectionStrings["ConnectionString"].ToString();
-        
-        public int IsUserAuthenticated(User user)
+
+        public int AuthenticateUser(User user)
         {
             string selectCommand = $"Select * from dbo.[User] where UserName=@username";
             int userID = 0;
-            int userIDFromData = 0;
-            string passwordSaltString = null;
-            string passwordHashString = null;
 
             // try catch any exception during connection
             using (SqlConnection conn = new SqlConnection(ConnectionString))
@@ -26,16 +23,12 @@ namespace FlatFilesConverter.Data
                     comm.Parameters.AddWithValue("username", user.Username);
                     var reader = comm.ExecuteReader();
 
-                    if (reader.HasRows)
+                    if (reader.Read())
                     {
-                        // only one line, does it need to use while
-                        while (reader.Read())
-                        {
-                            //use tryParse to catch exception
-                            userIDFromData = reader.GetInt32(0);
-                            passwordSaltString = reader.GetString(2);
-                            passwordHashString = reader.GetString(3);
-                        }
+                        //use tryParse to catch exception
+                        var userIDFromData = reader.GetInt32(0);
+                        var passwordSaltString = reader.GetString(2);
+                        var passwordHashString = reader.GetString(3);
 
                         int iterations = 1000;
                         byte[] salt = Convert.FromBase64String(passwordSaltString);

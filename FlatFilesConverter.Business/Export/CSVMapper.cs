@@ -10,21 +10,27 @@ namespace FlatFilesConverter.Business.Export
         public List<string> Map(DataTable table, Configuration configuration)
         {
             List<string> lines = new List<string>();
+            string part = null;
             foreach (DataRow row in table.Rows)
             {
                 List<string> columns = new List<string>();
-
                 foreach (DataColumn column in table.Columns)
                 {
-                    
-                    columns.Add(row[column].ToString().Trim());
+                    part = row[column].ToString().Trim();
+
+                    if (part.Contains("\""))
+                    {
+                        part = part.Replace("\"", "\"\"");
+                    }
+
+                    if (part.Contains(configuration.Delimiter))
+                    {
+                        part = $"\"{part}\"";
+                    }
+                    columns.Add(part);
                 }
 
                 lines.Add(string.Join($"{configuration.Delimiter}", columns));
-
-
-                // IEnumerable<string> columns = table.Columns.Cast<DataColumn>().Select(col => row[col].ToString());
-                // lines.Add(string.Join(",", columns));
             }
 
             return lines;

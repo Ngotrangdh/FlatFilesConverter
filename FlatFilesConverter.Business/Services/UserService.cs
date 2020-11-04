@@ -1,24 +1,33 @@
 ﻿using FlatFilesConverter.Data;
+using System;
 
 namespace FlatFilesConverter.Business.Services
 {
     public class UserService
     {
-        private UserDAO UserDAO => new UserDAO();
+        private readonly IUserDAO _userDAO;
 
-        public int IsAuthenticated(User user)
+        public UserService(): this(new UserDAO())
+        {}
+
+        public UserService(IUserDAO userDAO)
         {
-            return UserDAO.IsUserAuthenticated(user);
+            _userDAO = userDAO ?? throw new ArgumentNullException(nameof(userDAO));
+        }
+
+        public int AuthenticateUser(User user)
+        {
+            return _userDAO.AuthenticateUser(user);
         }
 
         public bool RegisterUser(User user)
         {
-            return UserDAO.RegisterUser(user);
+            return _userDAO.RegisterUser(user);
         }
 
         public User GetUser(string username)
         {
-            return UserDAO.GetUser(username);
+            return _userDAO.GetUser(username);
         }
     }
 }

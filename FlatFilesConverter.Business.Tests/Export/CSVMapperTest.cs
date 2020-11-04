@@ -21,7 +21,7 @@ namespace FlatFilesConverter.Export.Tests
                                 };
             table.Columns.AddRange(cols);
             object[] rows = {
-                                new object[] {"trang ", "29", "09"},
+                                new object[] {"tra\"n,g ", "29", "09"},
                                 new object[] {"phuong", "10", "10"},
                             };
             foreach (object[] row in rows)
@@ -32,9 +32,8 @@ namespace FlatFilesConverter.Export.Tests
 
             List<string> lines = sut.Map(table, config);
 
-            Assert.Equal("trang,29,09", lines[0]);
+            Assert.Equal("\"tra\"\"n,g\",29,09", lines[0]);
             Assert.Equal("phuong,10,10", lines[1]);
-
         }
     }
 }

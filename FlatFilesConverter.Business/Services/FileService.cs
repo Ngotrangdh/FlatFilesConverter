@@ -27,9 +27,9 @@ namespace FlatFilesConverter.Business.Services
             return _fileDAO.GetFileList(userID);
         }
 
-        public DataSet GetFileTable(string tableName)
+        public DataSet GetFileTable(string fileName)
         {
-            return _fileDAO.GetFileTable(tableName);
+            return _fileDAO.GetFileTable(fileName);
         }
 
         public string GetFileConfiguration(string fileName)

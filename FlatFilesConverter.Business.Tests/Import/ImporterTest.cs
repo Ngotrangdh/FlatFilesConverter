@@ -1,8 +1,8 @@
+using System.Data;
+using System.Collections.Generic;
 using FlatFilesConverter.Business.Config;
 using FlatFilesConverter.Business.Import;
 using Moq;
-using System.Collections.Generic;
-using System.Data;
 using Xunit;
 
 namespace FlatFilesConverter.Import.Tests

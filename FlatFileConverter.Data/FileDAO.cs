@@ -76,14 +76,21 @@ namespace FlatFilesConverter.Data
 
                     using (SqlDataReader reader = selectComm.ExecuteReader())
                     {
-                        while (reader.Read())
+                        if (reader.HasRows)
                         {
-                            fileList.Add(new File()
+                            while (reader.Read())
                             {
-                                FileName = reader.GetString(2),
-                                FileConfig = reader.GetString(3),
-                                CreatedDate = reader.GetDateTime(4)
-                            });
+                                fileList.Add(new File()
+                                {
+                                    FileName = reader.GetString(2),
+                                    FileConfig = reader.GetString(3),
+                                    CreatedDate = reader.GetDateTime(4)
+                                });
+                            }
+                        }
+                        else
+                        {
+                            return null;
                         }
                     }
                 }
@@ -91,15 +98,15 @@ namespace FlatFilesConverter.Data
             return fileList;
         }
 
-        public DataSet GetFileTable(string tableName)
+        public DataSet GetFileTable(string fileName)
         {
-            string selectCommandText = $"SELECT * FROM [dbo].[{tableName}];";
+            string selectCommandText = $"SELECT * FROM [dbo].[{fileName}];";
             var file = new DataSet();
             using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
                 using (SqlDataAdapter adapter = new SqlDataAdapter(selectCommandText, conn))
                 {
-                    var mappings = adapter.TableMappings.Add(tableName, tableName);
+                    var mappings = adapter.TableMappings.Add(fileName, fileName);
                     conn.Open();
                     adapter.FillSchema(file, SchemaType.Source);
                     adapter.Fill(file);
@@ -108,9 +115,9 @@ namespace FlatFilesConverter.Data
             return file;
         }
 
-        public string GetFileConfiguration(string tableName)
+        public string GetFileConfiguration(string fileName)
         {
-            string selectCommandText = $"SELECT Configuration FROM [dbo].[UserTableMappings] WHERE TableName='{tableName}';";
+            string selectCommandText = $"SELECT Configuration FROM [dbo].[UserTableMappings] WHERE TableName='{fileName}';";
 
             using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
