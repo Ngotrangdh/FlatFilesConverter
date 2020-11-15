@@ -88,10 +88,6 @@ namespace FlatFilesConverter.Data
                                 });
                             }
                         }
-                        else
-                        {
-                            return null;
-                        }
                     }
                 }
             }
