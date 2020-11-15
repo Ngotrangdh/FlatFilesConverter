@@ -111,7 +111,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Site.css" />
     <Content Include="ErrorPage.aspx" />
-    <Content Include="FixedWithToCSV.aspx" />
+    <Content Include="FixedWidthToCSV.aspx" />
     <Content Include="CSVToFixedWidth.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
@@ -178,12 +178,12 @@
     <Compile Include="ErrorPage.aspx.designer.cs">
       <DependentUpon>ErrorPage.aspx</DependentUpon>
     </Compile>
-    <Compile Include="FixedWithToCSV.aspx.cs">
-      <DependentUpon>FixedWithToCSV.aspx</DependentUpon>
+    <Compile Include="FixedWidthToCSV.aspx.cs">
+      <DependentUpon>FixedWidthToCSV.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="FixedWithToCSV.aspx.designer.cs">
-      <DependentUpon>FixedWithToCSV.aspx</DependentUpon>
+    <Compile Include="FixedWidthToCSV.aspx.designer.cs">
+      <DependentUpon>FixedWidthToCSV.aspx</DependentUpon>
     </Compile>
     <Compile Include="CSVToFixedWidth.aspx.cs">
       <DependentUpon>CSVToFixedWidth.aspx</DependentUpon>
