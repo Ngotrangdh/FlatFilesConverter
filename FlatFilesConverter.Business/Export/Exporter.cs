@@ -8,6 +8,9 @@ namespace FlatFilesConverter.Business.Export
         private IMapper _mapper;
         private IWriter _writer;
 
+        public Exporter(IMapper mapper) : this(mapper, new Writer())
+        { }
+
         public Exporter(IMapper mapper, IWriter writer)
         {
             _mapper = mapper ?? throw new System.ArgumentNullException(nameof(mapper));

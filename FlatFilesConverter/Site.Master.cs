@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 
 namespace FlatFilesConverter
 {
@@ -16,21 +17,20 @@ namespace FlatFilesConverter
             switch (Request.Url.AbsolutePath)
             {
                 case "/CSVToFixedWidth":
-                    LinkCSVToFixedWidth.Attributes["class"] = "active";
+                    ActivateLink(LinkCSVToFixedWidth);
                     break;
                 case "/FixedWidthToCSV":
-                    LinkFixedWidthToCSV.Attributes["class"] = "active";
+                    ActivateLink(LinkFixedWidthToCSV);
                     break;
                 case "/MyFiles":
-                    LinkMyFiles.Attributes["class"] = "active";
-                    break;
-                case "/Logout":
-                    LinkLogout.Attributes["class"] = "active";
-                    break;
-                case "/Registration":
-                    LinkRegister.Attributes["class"] = "active";
+                    ActivateLink(LinkMyFiles);
                     break;
             }
+        }
+
+        private void ActivateLink(HtmlGenericControl link)
+        {
+            link.Attributes["class"] = "active";
         }
     }
 }

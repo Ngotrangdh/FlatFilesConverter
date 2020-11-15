@@ -10,6 +10,9 @@ namespace FlatFilesConverter.Business.Import
         private readonly IFileReader _fileReader;
         private readonly IMapper _mapper;
 
+        public Importer(IMapper mapper) : this(new FileReader(), mapper)
+        { }
+
         public Importer(IFileReader fileReader, IMapper mapper)
         {
             _fileReader = fileReader ?? throw new ArgumentNullException(nameof(fileReader));
