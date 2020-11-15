@@ -22,8 +22,8 @@ namespace FlatFilesConverter
                     case "/CSVToFixedWidth":
                         LinkCSVToFixedWidth.Attributes["class"] = "active";
                         break;
-                    case "/FixedWithToCSV":
-                        LinkFixedWithToCSV.Attributes["class"] = "active";
+                    case "/FixedWidthToCSV":
+                        LinkFixedWidthToCSV.Attributes["class"] = "active";
                         break;
                     case "/MyFiles":
                         LinkMyFiles.Attributes["class"] = "active";

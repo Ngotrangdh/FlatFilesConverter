@@ -140,7 +140,7 @@ namespace FlatFilesConverter
             var outputFilePath = Server.MapPath($"Data\\{outputFileName}");
             var importMapper = new Business.Import.FixedWidthMapper();
             var exportMapper = new Business.Export.CSVMapper();
-            
+
             var table = ConvertFile(importMapper, savePath, config, outputFilePath, exportMapper);
 
             if (table is null)

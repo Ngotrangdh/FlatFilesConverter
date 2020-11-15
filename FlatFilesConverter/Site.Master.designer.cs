@@ -24,13 +24,13 @@ namespace FlatFilesConverter
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl LinkCSVToFixedWidth;
 
         /// <summary>
-        /// LinkFixedWithToCSV control.
+        /// LinkFixedWidthToCSV control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl LinkFixedWithToCSV;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl LinkFixedWidthToCSV;
 
         /// <summary>
         /// LinkMyFiles control.
