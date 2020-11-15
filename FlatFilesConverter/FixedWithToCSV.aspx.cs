@@ -9,6 +9,7 @@ using FlatFilesConverter.Business.Config;
 using FlatFilesConverter.Business.Export;
 using FlatFilesConverter.Business.Import;
 using FlatFilesConverter.Business.Services;
+using System.IO;
 
 namespace FlatFilesConverter
 {
@@ -136,7 +137,7 @@ namespace FlatFilesConverter
                 ColumnLayouts = Columns
             };
 
-            var outputFileName = System.IO.Path.GetFileNameWithoutExtension(savePath) + ".csv";
+            var outputFileName = Path.GetFileNameWithoutExtension(savePath) + ".csv";
             var outputFilePath = Server.MapPath($"Data\\{outputFileName}");
             var importMapper = new Business.Import.FixedWidthMapper();
             var exportMapper = new Business.Export.CSVMapper();
@@ -148,10 +149,12 @@ namespace FlatFilesConverter
                 return;
             }
 
-            var userID = int.Parse(Session["userID"].ToString());
-            string JSONConfig = JsonConvert.SerializeObject(config);
-            FileService fileService = new FileService();
-            fileService.SaveTable(JSONConfig, userID, System.IO.Path.GetFileNameWithoutExtension(savePath), table);
+            if (Session["userID"] is int userID)
+            {
+                string JSONConfig = JsonConvert.SerializeObject(config);
+                FileService fileService = new FileService();
+                fileService.SaveTable(JSONConfig, userID, Path.GetFileNameWithoutExtension(savePath), table);
+            }
 
             Response.Redirect($"DownloadFile.ashx?filePath={outputFilePath}");
         }

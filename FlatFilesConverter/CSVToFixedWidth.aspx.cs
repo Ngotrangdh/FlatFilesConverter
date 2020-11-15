@@ -161,10 +161,12 @@ namespace FlatFilesConverter
                 return;
             }
 
-            var userID = int.Parse(Session["userID"].ToString());
-            var JSONConfig = JsonConvert.SerializeObject(config);
-            FileService fileService = new FileService();
-            fileService.SaveTable(JSONConfig, userID, Path.GetFileNameWithoutExtension(savePath), table);
+            if (Session["userID"] is int userID)
+            {
+                var JSONConfig = JsonConvert.SerializeObject(config);
+                FileService fileService = new FileService();
+                fileService.SaveTable(JSONConfig, userID, Path.GetFileNameWithoutExtension(savePath), table);
+            }
 
             Response.Redirect($"DownloadFile.ashx?filePath={outputFilePath}");
         }

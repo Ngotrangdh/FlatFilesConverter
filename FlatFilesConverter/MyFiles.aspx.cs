@@ -8,16 +8,21 @@ using FlatFilesConverter.Business.Config;
 using FlatFilesConverter.Business.Export;
 using FlatFilesConverter.Business.Services;
 using System.Linq;
+using System.Web.UI;
 
 namespace FlatFilesConverter
 {
-    public partial class MyFiles : System.Web.UI.Page
+    public partial class MyFiles : Page
     {
         private FileService FileService => new FileService();
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["userID"] != null)
+            if (Session["userID"] is null)
+            {
+                Response.Redirect($"~/Login?ReturnURL={Request.Url}");
+            }
+            else
             {
                 GetData(-1);
             }
@@ -58,7 +63,6 @@ namespace FlatFilesConverter
                 var file = files.ElementAt(indexToRemove);
                 files.RemoveAt(indexToRemove);
 
-                //TODO: remove file from DB
                 FileService.DeleteFile(file.FileName);
                 Response.Redirect("~/MyFiles.aspx");
             }
