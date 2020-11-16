@@ -15,7 +15,7 @@ namespace FlatFilesConverter
                 Response.Cookies.Add(usernameCookie);
             }
 
-            Response.Redirect("~/Default.aspx");
+            Response.Redirect("/");
         }
     }
 }

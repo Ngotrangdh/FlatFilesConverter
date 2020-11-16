@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace FlatFilesConverter
 {
-    public partial class ErrorPage : System.Web.UI.Page
+    public partial class ErrorPage : Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -15,7 +11,7 @@ namespace FlatFilesConverter
 
             if (exc != null)
             {
-                ServerError.Text = exc.InnerException.Message;
+                ServerError.Text = "An error has occured. Please try again.";
             }
         }
     }

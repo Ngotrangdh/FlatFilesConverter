@@ -10,11 +10,10 @@ namespace FlatFilesConverter
     public partial class Login : System.Web.UI.Page
     {
         private UserService UserService => new UserService();
+        private string ReturnPath => Request.QueryString["ReturnURL"] ?? "/";
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            string returnPath = Request.QueryString["ReturnURL"] ?? "/";
-
             if (Session["userID"] is null && Request.Cookies["username"] is HttpCookie usernameCookie)
             {
                 string username = Unprotect(usernameCookie.Value, "identity");
@@ -24,7 +23,7 @@ namespace FlatFilesConverter
                     if (user != null)
                     {
                         Session["userID"] = user.UserID;
-                        Response.Redirect(returnPath);
+                        Response.Redirect(ReturnPath);
                     }
                 }
             }
@@ -32,43 +31,37 @@ namespace FlatFilesConverter
 
         protected void ButtonLogin_Click(object sender, EventArgs e)
         {
-            var username = TextBoxLoginUsername.Text;
-            var password = TextBoxLoginPassword.Text;
-            bool isPersistentCookie = CheckBoxRememberMe.Checked;
-            User user = new User() { Username = username, Password = password };
-            string userID = UserService.AuthenticateUser(user).ToString();
+            string username = TextBoxLoginUsername.Text;
+            string password = TextBoxLoginPassword.Text;
+            User user = new User { Username = username, Password = password };
+            int userID = UserService.AuthenticateUser(user);
 
-            string returnPath = Request.QueryString["ReturnURL"];
-
-            if (userID != "0")
+            if (userID > 0)
             {
-                Session["userID"] = userID;
-
-                if (isPersistentCookie)
-                {
-                    string protectedUserID = Protect(username, "identity");
-                    HttpCookie cookie = new HttpCookie("username", protectedUserID)
-                    {
-                        Expires = DateTime.Now.AddDays(2)
-                    };
-                    Response.Cookies.Add(cookie);
-                }
+                RememberUser(username, userID);
             }
             else
             {
                 DivLoginError.Visible = true;
-                LoginErrorMessages.Text = ("Incorrect username or password");
+                LoginErrorMessages.Text = "Incorrect username or password";
                 return;
             }
 
-            if (returnPath == null)
-            {
+            Response.Redirect(ReturnPath);
+        }
 
-                Response.Redirect("~/Default.aspx");
-            }
-            else
+        private void RememberUser(string username, int userID)
+        {
+            Session["userID"] = userID;
+
+            if (CheckBoxRememberMe.Checked)
             {
-                Response.Redirect(returnPath);
+                string protectedUserID = Protect(username, "identity");
+                HttpCookie cookie = new HttpCookie("username", protectedUserID)
+                {
+                    Expires = DateTime.Now.AddDays(2)
+                };
+                Response.Cookies.Add(cookie);
             }
         }
 

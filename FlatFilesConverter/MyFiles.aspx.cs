@@ -22,62 +22,53 @@ namespace FlatFilesConverter
             {
                 Response.Redirect($"~/Login?ReturnURL={Request.Url}");
             }
-            else
+
+            if (!IsPostBack)
             {
-                GetData(-1);
+                GetData();
             }
         }
 
         protected void ButtonDownloadCSV_Click(object sender, EventArgs e)
         {
-            if (Request.QueryString["id"] is string fileName)
-            {
-                var CSVMapper = new CSVMapper();
-                string outputFilePath = Server.MapPath($"Data\\{fileName}.csv");
-                GenerateDownloadedCSVFile(fileName, CSVMapper, outputFilePath);
-            }
+            DownloadFile(new CSVMapper(), "csv");
         }
 
         protected void ButtonDownloadFixedWidth_Click(object sender, EventArgs e)
         {
-            if (Request.QueryString["id"] is string fileName)
-            {
-                var fixedWidthMapper = new FixedWidthMapper();
-                string outputFilePath = Server.MapPath($"Data\\{fileName}.dat");
-                GenerateDownloadedCSVFile(fileName, fixedWidthMapper, outputFilePath);
-            }
+            DownloadFile(new FixedWidthMapper(), "dat");
         }
 
         protected void GridViewFileList_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
-            GetData(e.RowIndex);
+            List<File> files = GetFiles();
+            File file = files.ElementAt(e.RowIndex);
+            files.RemoveAt(e.RowIndex);
+            FileService.DeleteFile(file.FileName);
+            Response.Redirect("~/MyFiles.aspx");
         }
-        
-        protected private void GetData(int indexToRemove)
+
+        private void DownloadFile(IMapper mapper, string extension)
         {
-            int userID = int.Parse(Session["userID"].ToString());
-            List<File> files = FileService.GetFileList(userID);
-
-            if (indexToRemove > -1)
+            if (Request.QueryString["id"] is string fileName)
             {
-                var file = files.ElementAt(indexToRemove);
-                files.RemoveAt(indexToRemove);
-
-                FileService.DeleteFile(file.FileName);
-                Response.Redirect("~/MyFiles.aspx");
+                string outputFilePath = Server.MapPath($"Data\\{fileName}.{extension}");
+                GenerateFile(fileName, outputFilePath, mapper);
             }
+        }
 
-            if (files.Count != 0)
+        private void GetData()
+        {
+            List<File> files = GetFiles();
+
+            if (files.Any())
             {
                 GridViewFileList.DataSource = files;
                 GridViewFileList.DataBind();
 
-                if (Request.QueryString["id"] is string tableName) //check if file exists in files list
+                if (Request.QueryString["id"] is string fileName)
                 {
-                    ButtonDownloadCSV.Visible = true;
-                    ButtonDownloadFixedWidth.Visible = true;
-                    GridViewFileView.DataSource = FileService.GetFileTable(tableName);
-                    GridViewFileView.DataBind();
+                    ShowFileDetails(fileName);
                 }
                 else
                 {
@@ -86,18 +77,31 @@ namespace FlatFilesConverter
             }
             else
             {
-                LabelNoFileUploaded.Text = "You have not uploaded any files.";
+                LabelNoFileUploaded.Text = "You have no files.";
             }
         }
 
-        protected private void GenerateDownloadedCSVFile(string fileName, IMapper mapper, string outputFilePath)
+        private void ShowFileDetails(string fileName)
+        {
+            ButtonDownloadCSV.Visible = true;
+            ButtonDownloadFixedWidth.Visible = true;
+            GridViewFileView.DataSource = FileService.GetFileTable(fileName);
+            GridViewFileView.DataBind();
+        }
+
+        private List<File> GetFiles()
+        {
+            int userID = int.Parse(Session["userID"].ToString());
+            List<File> files = FileService.GetFileList(userID);
+            return files;
+        }
+
+        private void GenerateFile(string fileName, string outputFilePath, IMapper mapper)
         {
             DataTable table = FileService.GetFileTable(fileName).Tables[0];
-            string jSONConfig = FileService.GetFileConfiguration(fileName);
-            Configuration config = JsonConvert.DeserializeObject<Configuration>(jSONConfig);
-
-            var writer = new Writer();
-            var exporter = new Exporter(mapper, writer);
+            string jsonConfig = FileService.GetFileConfiguration(fileName);
+            Configuration config = JsonConvert.DeserializeObject<Configuration>(jsonConfig);
+            var exporter = new Exporter(mapper);
             exporter.Export(table, outputFilePath, config);
             Response.Redirect($"DownloadFile.ashx?filePath={outputFilePath}");
         }
