@@ -10,80 +10,31 @@ using FlatFilesConverter.Business.Export;
 using FlatFilesConverter.Business.Import;
 using FlatFilesConverter.Business.Services;
 using System.IO;
+using FixedWidthMapper = FlatFilesConverter.Business.Import.FixedWidthMapper;
+using CSVMapper = FlatFilesConverter.Business.Export.CSVMapper;
 
 namespace FlatFilesConverter
 {
     public partial class FixedWidthToCSV : Page
     {
         private const string COLUMN_LAYOUTS = "ColumnLayouts";
-
+        private const string GENERIC_ERROR_MESSAGE = "An error has occurred. Please try again.";
         private List<ColumnLayout> Columns => (List<ColumnLayout>)(ViewState[COLUMN_LAYOUTS] ?? (ViewState[COLUMN_LAYOUTS] = new List<ColumnLayout>()));
 
         protected void ButtonAddRow_Click(object sender, EventArgs e)
         {
-            BulletedListError.Items.Clear();
-            LabelColumnsEmptyError.Text = string.Empty;
+            ClearErrors();
 
-            if (string.IsNullOrWhiteSpace(TextBoxFieldName.Text))
-            {
-                BulletedListError.Items.Add(new ListItem("Field name required."));
-            }
-
-            if (string.IsNullOrWhiteSpace(TextBoxColumnPosition.Text))
-            {
-                BulletedListError.Items.Add(new ListItem("Column Position required."));
-            }
-
-            if (string.IsNullOrWhiteSpace(TextBoxFieldLength.Text))
-            {
-                BulletedListError.Items.Add(new ListItem("Field length required."));
-            }
-
-            if (!int.TryParse(TextBoxColumnPosition.Text, out int _columnPosition))
-            {
-                BulletedListError.Items.Add(new ListItem("Column position has to be 0 or a postive number."));
-            }
-
-            if (!int.TryParse(TextBoxFieldLength.Text, out int _fieldLength))
-            {
-                BulletedListError.Items.Add(new ListItem("Field length has to be a positive number."));
-            }
-
-            if (_columnPosition < 0)
-            {
-                BulletedListError.Items.Add(new ListItem("Column position has to be 0 or a postive number."));
-            }
-
-            if (_fieldLength < 0)
-            {
-                BulletedListError.Items.Add(new ListItem("Field length has to be a positive number."));
-
-            }
+            var columnLayout = ValidateFieldLayoutForm();
 
             if (BulletedListError.Items.Count > 0)
             {
                 return;
             }
 
-            var ColumnLayout = new ColumnLayout
-            {
-                FieldName = TextBoxFieldName.Text,
-                ColumnPosition = _columnPosition,
-                FieldLength = _fieldLength
-            };
-
-            Columns.Add(ColumnLayout);
+            Columns.Add(columnLayout);
             BindGridView();
-            TextBoxFieldName.Text = string.Empty;
-            TextBoxFieldName.Focus();
-            TextBoxColumnPosition.Text = string.Empty;
-            TextBoxFieldLength.Text = string.Empty;
-        }
-
-        private void BindGridView()
-        {
-            GridViewLayout.DataSource = Columns;
-            GridViewLayout.DataBind();
+            ResetFieldLayoutForm();
         }
 
         protected void GridViewLayout_RowDeleting(object sender, GridViewDeleteEventArgs e)
@@ -96,14 +47,10 @@ namespace FlatFilesConverter
         {
             var savePath = Server.MapPath("Data\\");
 
-            if (FileUpload.HasFile)
+            var filePath = SaveFileToDisk(savePath);
+
+            if (string.IsNullOrEmpty(filePath))
             {
-                savePath += Server.HtmlEncode(FileUpload.FileName);
-                FileUpload.SaveAs(savePath);
-            }
-            else
-            {
-                LabelFileUploadError.Text = "Please upload a file.";
                 return;
             }
 
@@ -113,9 +60,42 @@ namespace FlatFilesConverter
                 return;
             }
 
-            bool isFirstLineHeader = CheckBoxIsFirstLineHeader.Checked;
+            char delimiter = GetDelimiter();
 
+            if (delimiter == 0)
+            {
+                return;
+            }
+
+            var config = new Configuration
+            {
+                Delimiter = delimiter,
+                IsFirstLineHeader = CheckBoxIsFirstLineHeader.Checked,
+                ColumnLayouts = Columns
+            };
+
+            var outputFileName = Path.GetFileNameWithoutExtension(filePath) + ".csv";
+            var outputFilePath = Server.MapPath($"Data\\{outputFileName}");
+
+            var table = ConvertFile(filePath, config, outputFilePath);
+
+            if (table is null)
+            {
+                return;
+            }
+
+            if (Session["userID"] is int userID)
+            {
+                SaveFileToDatabase(filePath, config, table, userID);
+            }
+
+            Response.Redirect($"DownloadFile.ashx?filePath={outputFilePath}");
+        }
+
+        private char GetDelimiter()
+        {
             char delimiter;
+
             if (string.IsNullOrWhiteSpace(TextBoxDelimiter.Text))
             {
                 delimiter = ',';
@@ -127,56 +107,118 @@ namespace FlatFilesConverter
             else
             {
                 LabelDelimiterError.Text = "Delimiter has to be a character.";
-                return;
+                delimiter = (char)0;
             }
-
-            var config = new Configuration
-            {
-                Delimiter = delimiter,
-                IsFirstLineHeader = isFirstLineHeader,
-                ColumnLayouts = Columns
-            };
-
-            var outputFileName = Path.GetFileNameWithoutExtension(savePath) + ".csv";
-            var outputFilePath = Server.MapPath($"Data\\{outputFileName}");
-            var importMapper = new Business.Import.FixedWidthMapper();
-            var exportMapper = new Business.Export.CSVMapper();
-
-            var table = ConvertFile(importMapper, savePath, config, outputFilePath, exportMapper);
-
-            if (table is null)
-            {
-                return;
-            }
-
-            if (Session["userID"] is int userID)
-            {
-                string JSONConfig = JsonConvert.SerializeObject(config);
-                FileService fileService = new FileService();
-                fileService.SaveTable(JSONConfig, userID, Path.GetFileNameWithoutExtension(savePath), table);
-            }
-
-            Response.Redirect($"DownloadFile.ashx?filePath={outputFilePath}");
+            return delimiter;
         }
 
-        protected private DataTable ConvertFile(Business.Import.IMapper importMapper, string savePath, Configuration config, string outputFilePath, Business.Export.IMapper exportMapper)
+        private void ResetFieldLayoutForm()
         {
-            var reader = new FileReader();
-            var writer = new Writer();
-            var importer = new Importer(reader, importMapper);
-            var exporter = new Exporter(exportMapper, writer);
-            var table = new DataTable();
+            TextBoxFieldName.Text = string.Empty;
+            TextBoxFieldName.Focus();
+            TextBoxColumnPosition.Text = string.Empty;
+            TextBoxFieldLength.Text = string.Empty;
+        }
+
+        private ColumnLayout ValidateFieldLayoutForm()
+        {
+            AssertNotEmpty(TextBoxFieldName.Text, "Field Name required.");
+            AssertNotEmpty(TextBoxColumnPosition.Text, "Column Position required.");
+            AssertNotEmpty(TextBoxFieldLength.Text, "Field Length required.");
+            Assert(!int.TryParse(TextBoxColumnPosition.Text, out int columnPosition), "Column Position has to be 0 or greater.");
+            Assert(!int.TryParse(TextBoxFieldLength.Text, out int fieldLength), "Field Length has to be greater than 0.");
+            Assert(columnPosition < 0, "Column Position has to be 0 or greater.");
+            Assert(fieldLength < 0, "Field Length has to be greater than 0.");
+
+            return new ColumnLayout
+            {
+                ColumnPosition = columnPosition,
+                FieldLength = fieldLength,
+                FieldName = TextBoxFieldName.Text
+            };
+        }
+
+        private void AssertNotEmpty(string fieldInput, string error)
+        {
+            Assert(string.IsNullOrWhiteSpace(fieldInput), error);
+            Assert(string.IsNullOrWhiteSpace(TextBoxFieldName.Text), "Field name required.");
+        }
+
+        private void Assert(bool predicate, string error)
+        {
+            if (predicate)
+            {
+                BulletedListError.Items.Add(new ListItem(error));
+            }
+        }
+
+        private void ClearErrors()
+        {
+            BulletedListError.Items.Clear();
+            LabelColumnsEmptyError.Text = string.Empty;
+        }
+
+        private void BindGridView()
+        {
+            GridViewLayout.DataSource = Columns;
+            GridViewLayout.DataBind();
+        }
+
+        protected private DataTable ConvertFile(string savePath, Configuration config, string outputFilePath)
+        {
+            DataTable table;
+
+            var importer = new Importer(new FixedWidthMapper());
+            var exporter = new Exporter(new CSVMapper());
+
             try
             {
                 table = importer.Import(savePath, config);
+                exporter.Export(table, outputFilePath, config);
             }
-            catch (ArgumentOutOfRangeException)
+            catch
             {
-                BulletedListError.Items.Add(new ListItem("Column position cannot be greater than the length of each line."));
-                return null;
+                BulletedListError.Items.Add(new ListItem(GENERIC_ERROR_MESSAGE));
+                table = null;
             }
-            exporter.Export(table, outputFilePath, config);
             return table;
         }
+        private static void SaveFileToDatabase(string savePath, Configuration config, DataTable table, int userID)
+        {
+            string JSONConfig = JsonConvert.SerializeObject(config);
+            FileService fileService = new FileService();
+            fileService.SaveTable(JSONConfig, userID, Path.GetFileNameWithoutExtension(savePath), table);
+        }
+
+        private string SaveFileToDisk(string savePath)
+        {
+            string errorMessage = string.Empty;
+            string filePath = string.Empty;
+            if (FileUpload.HasFile)
+            {
+                filePath = savePath + Server.HtmlEncode(FileUpload.FileName);
+                try
+                {
+                    FileUpload.SaveAs(filePath);
+                }
+                catch
+                {
+                    errorMessage = GENERIC_ERROR_MESSAGE;
+                }
+            }
+            else
+            {
+                errorMessage = "You did not specify a file to upload";
+            }
+
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                LabelFileUploadError.Text = errorMessage;
+                filePath = string.Empty;
+            }
+
+            return filePath;
+        }
+
     }
 }

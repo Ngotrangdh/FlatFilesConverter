@@ -17,8 +17,9 @@ namespace FlatFilesConverter
     public partial class CSVToFixedWidth : Page
     {
         private const string GENERIC_ERROR_MESSAGE = "An error has occurred. Please try again.";
+        private const string COLUMN_LAYOUTS = "ColumnLayouts";
 
-        private List<ColumnLayout> Columns => (List<ColumnLayout>)(ViewState["Columns"] ?? (ViewState["Columns"] = new List<ColumnLayout>()));
+        private List<ColumnLayout> Columns => (List<ColumnLayout>)(ViewState[COLUMN_LAYOUTS] ?? (ViewState[COLUMN_LAYOUTS] = new List<ColumnLayout>()));
 
         protected void ButtonAddRow_Click(object sender, EventArgs e)
         {
